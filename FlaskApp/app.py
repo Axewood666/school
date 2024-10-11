@@ -1,13 +1,19 @@
 from flask import Flask, render_template, request, Response
 import psycopg2
+from configparser import ConfigParser
 
+urlconf  = 'config/config.ini'
+config =ConfigParser()
+config.read(urlconf)
+user_db = config['login_db']['user_db']
+password_db = config['login_db']['password_db']
+name_db = config['login_db']['database_name']
 app = Flask(__name__)
-
 def get_db_connection():
     conn = psycopg2.connect(host='localhost',
-                            database='schoolDB',
-                            user='postgres',
-                            password='axewood')
+                            database=name_db,
+                            user=user_db,
+                            password=password_db)
     return conn
 
 @app.route("/")
