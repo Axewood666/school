@@ -1,17 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="../static/css/style.css" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-     <input type="text" id="name" name="Teacher_name">
-     <input type="text" id="lastName" name="Teacher_lastName">
-     <input type="text" id="middleName" name="Teacher_middleName">
-     <button onclick="sendData()">Send Data</button>
-
-   <div id="output"></div>
-    <script src="../static/js/script.js"></script>
+<div class="list-of-student-by-teacher">
+    <div class="teacher-input-form">
+    <div class="text-field">
+     <label class="text-field__label" for="name">Имя</label>
+     <input class="text-field__input" type="text" id="name" name="Teacher_name" placeholder="Имя">
+    </div>
+    <div class="text-field">
+     <label class="text-field__label" for="lastName">Фамилия</label>
+     <input class="text-field__input" type="text" id="lastName" name="Teacher_lastName" placeholder="Фамилия">
+    </div>
+    <div class="text-field">
+     <label class="text-field__label" for="middleName">Отчество</label>
+     <input class="text-field__input" type="text" id="middleName" name="Teacher_middleName" placeholder="Отчество">
+    </div>
+     <button class="c-button" onclick="sendData()">Прикрепленный класс</button>
+     <button class="c-button" onclick="sendData()">Список предметов</button>
+     <button class="c-button" onclick="sendData()">Выставленные оценки</button>
+     <div style="margin-top: 10px;" id="output"></div>
+    </div>
+</div>
+ <script src="../static/js/script.js"></script>
 </body>
 </html>
