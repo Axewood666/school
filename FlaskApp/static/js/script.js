@@ -3,7 +3,7 @@ function sendData() {
     var lastName = document.getElementById('lastName').value;
     var middleName = document.getElementById('middleName').value;
     $.ajax({
-        url: '/process',
+        url: '/teacher/list-of-students',
         type: 'POST',
         data: {
                 '_name': name,

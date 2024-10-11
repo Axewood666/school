@@ -1,64 +1,26 @@
-from flask import Flask, render_template, request, Response
-import psycopg2
-from configparser import ConfigParser
+from flask import Flask, render_template, request
+import db_utils
 
-urlconf  = 'config/config.ini'
-config =ConfigParser()
-config.read(urlconf)
-user_db = config['login_db']['user_db']
-password_db = config['login_db']['password_db']
-name_db = config['login_db']['database_name']
 app = Flask(__name__)
-def get_db_connection():
-    conn = psycopg2.connect(host='localhost',
-                            database=name_db,
-                            user=user_db,
-                            password=password_db)
-    return conn
+
 
 @app.route("/")
-def main():
+def Main():
     return render_template('index.html')
 
 @app.route("/teacher")
-def teacher():
+def Teacher():
     return render_template('teacher.html')
-@app.route("/process", methods=['POST'])
-def process():
+@app.route("/teacher/list-of-students", methods=['POST'])
+def List_of_students():
     name = request.form.get('_name')
     lastName = request.form.get('_lastName')
     middleName = request.form.get('_middleName')
-    conn = get_db_connection()
-    cur = conn.cursor()
-    if len(middleName) != 0:
-        cur.execute(f"SELECT * FROM get_class_id_by_teacher_name('{name}','{lastName}','{middleName}')")
-    else:
-        cur.execute(f"SELECT * FROM get_class_id_by_teacher_name('{name}','{lastName}')")
-    if(cur.rowcount == 0):
+    result = db_utils.get_class_id_by_teacher_name(name, lastName, middleName)
+    if result == 404:
         return 'Преподавателя с таким фио не существует, либо у него нет класса!', 404
     else:
-        result = cur.fetchone()
-        cur.execute(f'''SELECT 
-            s.FirstName,
-            s.MiddleName,
-            s.LastName,
-            s.BirthDate,
-            s.Gender,
-            s.Address,
-            s.PhoneNumber,
-            s.Email,
-            c.ClassName
-        FROM 
-            Student s
-        JOIN 
-            Class c ON s.ClassID = c.ClassID
-        WHERE 
-            s.CLASSID={result[0]}''')
-        result = cur.fetchall()
-        headers = tuple([i[0] for i in cur.description])
-        result.insert(0, headers)
-    cur.close()
-    conn.close()
+        result = db_utils.get_class_list_by_classid(result[0])
     return result
 
 if __name__ == "__main__":
