@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="../static/css/style.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="list-of-student-by-teacher">
+    <div class="teacher-input-form">
+    <div class="text-field">
+     <label class="text-field__label" for="name">Имя</label>
+     <input class="text-field__input" type="text" id="name" name="Teacher_name" placeholder="Имя">
+    </div>
+    <div class="text-field">
+     <label class="text-field__label" for="lastName">Фамилия</label>
+     <input class="text-field__input" type="text" id="lastName" name="Teacher_lastName" placeholder="Фамилия">
+    </div>
+    <div class="text-field">
+     <label class="text-field__label" for="middleName">Отчество</label>
+     <input class="text-field__input" type="text" id="middleName" name="Teacher_middleName" placeholder="Отчество">
+    </div>
+     <button class="c-button" onclick="List_of_students()">Прикрепленный класс</button>
+     <button class="c-button" onclick="List_of_subjects()">Список предметов</button>
+     <button class="c-button" onclick="List_of_student()">Выставленные оценки</button>
+     <div style="margin-top: 10px;" id="output"></div>
+    </div>
+  <script src="../static/js/requests.js"></script>
+</div>
+</body>
+</html>
