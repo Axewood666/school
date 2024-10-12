@@ -16,6 +16,7 @@ def get_db_connection():
                             password=password_db)
     return conn
 
+
 def get_class_id_by_teacher_name(name, lastName, middleName):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -30,6 +31,7 @@ def get_class_id_by_teacher_name(name, lastName, middleName):
     cur.close()
     conn.close()
     return result
+
 
 def get_class_list_by_classid(classid):
     conn = get_db_connection()
@@ -53,4 +55,35 @@ def get_class_list_by_classid(classid):
     result = cur.fetchall()
     headers = tuple([i[0] for i in cur.description])
     result.insert(0, headers)
+    cur.close()
+    conn.close()
+    return result
+
+
+def get_teacher_id_by_name(name, lName, mName):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    if len(mName) != 0:
+        cur.execute(f'''SELECT teacherid FROM teacher
+         WHERE firstname=\'{name}\' and middlename=\'{mName}\' and lastname=\'{lName}\'''')
+    else:
+        cur.execute(f'''SELECT teacherid FROM teacher
+         WHERE firstname=\'{name}\' and lastname=\'{lName}\'''')
+    if(cur.rowcount == 0):
+        return 404
+    teacherId = cur.fetchone()
+    cur.close()
+    conn.close()
+    return teacherId
+
+
+def get_subjects_by_teacher(teacherId):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(f'''SELECT subjectname FROM subject
+     WHERE subjectid IN
+     (SELECT subjectid FROM teachersubject WHERE teacherid={teacherId})''')
+    result = cur.fetchall()
+    cur.close()
+    conn.close()
     return result

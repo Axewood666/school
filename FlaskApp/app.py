@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request
+import json
+
+from flask import Flask, render_template, request, jsonify
 import db_utils
 
 app = Flask(__name__)
@@ -22,6 +24,20 @@ def List_of_students():
     else:
         result = db_utils.get_class_list_by_classid(result[0])
     return result
+
+@app.route("/teacher/list-of-subjects", methods=['POST'])
+def List_of_subjects():
+    jsonFIO = request.get_json()
+    name = jsonFIO['_name']
+    lastName = jsonFIO['_lastName']
+    middleName = jsonFIO['_middleName']
+    teacherId = db_utils.get_teacher_id_by_name(name, lastName, middleName)
+    if teacherId == 404:
+        return "Преподаватель не найден", 404
+    result = db_utils.get_subjects_by_teacher(teacherId[0])
+    subjects = [row[0] for row in result]
+    jsonRes = {'subjects': subjects}
+    return json.dumps(jsonRes)
 
 if __name__ == "__main__":
     app.run()
