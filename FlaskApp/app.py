@@ -13,7 +13,7 @@ def Main():
 @app.route("/teacher")
 def Teacher():
     return render_template('teacher.html')
-@app.route("/teacher/list-of-students", methods=['POST'])
+@app.route("/teacher/students", methods=['POST'])
 def List_of_students():
     name = request.form.get('_name')
     lastName = request.form.get('_lastName')
@@ -25,7 +25,7 @@ def List_of_students():
         result = db_utils.get_class_list_by_classid(result[0])
     return result
 
-@app.route("/teacher/list-of-subjects", methods=['POST'])
+@app.route("/teacher/subjects", methods=['POST'])
 def List_of_subjects():
     jsonFIO = request.get_json()
     name = jsonFIO['_name']
@@ -38,6 +38,11 @@ def List_of_subjects():
     subjects = [row[0] for row in result]
     jsonRes = {'subjects': subjects}
     return json.dumps(jsonRes)
+
+@app.route("/teacher/grades")
+def List_of_grades():
+    return 1
+
 
 if __name__ == "__main__":
     app.run()
