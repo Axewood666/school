@@ -21,12 +21,12 @@
      <label class="text-field__label" for="middleName">Отчество</label>
      <input class="text-field__input" type="text" id="middleName" name="Teacher_middleName" placeholder="Отчество">
     </div>
-     <button class="c-button" onclick="List_of_students()">Прикрепленный класс</button>
-     <button class="c-button" onclick="List_of_subjects()">Список предметов</button>
-     <button class="c-button" onclick="List_of_student()">Выставленные оценки</button>
+     <button class="c-button" onclick="window.List_of_students()">Класс</button>
+     <button class="c-button" onclick="window.List_of_subjects()">Предметы</button>
+     <button class="c-button" onclick="window.List_of_grades()">Оценки</button>
      <div style="margin-top: 10px;" id="output"></div>
     </div>
-  <script src="../static/js/requests.js"></script>
+  <script type="module" src="../static/js/requests.js"></script>
 </div>
 </body>
 </html>

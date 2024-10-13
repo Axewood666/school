@@ -40,7 +40,7 @@ def get_class_list_by_classid(classid):
                 s.FirstName,
                 s.MiddleName,
                 s.LastName,
-                s.BirthDate,
+                CAST(s.BirthDate AS TEXT),
                 s.Gender,
                 s.Address,
                 s.PhoneNumber,
@@ -60,29 +60,50 @@ def get_class_list_by_classid(classid):
     return result
 
 
-def get_teacher_id_by_name(name, lName, mName):
+def get_subjects_by_teacher(name, lastName, middleName):
     conn = get_db_connection()
     cur = conn.cursor()
-    if len(mName) != 0:
-        cur.execute(f'''SELECT teacherid FROM teacher
-         WHERE firstname=\'{name}\' and middlename=\'{mName}\' and lastname=\'{lName}\'''')
+    if(len(middleName) != 0):
+        cur.execute(f"""SELECT subjectname FROM subject
+         WHERE subjectid IN
+         (SELECT subjectid FROM teachersubject 
+         WHERE  teacherid=(SELECT teacherid FROM teacher 
+         WHERE firstname='{name}' and lastname='{lastName}' and middlename='{middleName}'))""")
     else:
-        cur.execute(f'''SELECT teacherid FROM teacher
-         WHERE firstname=\'{name}\' and lastname=\'{lName}\'''')
-    if(cur.rowcount == 0):
-        return 404
-    teacherId = cur.fetchone()
+        cur.execute(f"""SELECT subjectname FROM subject
+         WHERE subjectid IN
+         (SELECT subjectid FROM teachersubject 
+         WHERE  teacherid=(SELECT teacherid FROM teacher 
+         WHERE firstname='{name}' and lastname='{lastName}'))""")
+    result = cur.fetchall()
     cur.close()
     conn.close()
-    return teacherId
+    return result
 
 
-def get_subjects_by_teacher(teacherId):
+def get_grades_by_teacher(name, lastName, middleName):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute(f'''SELECT subjectname FROM subject
-     WHERE subjectid IN
-     (SELECT subjectid FROM teachersubject WHERE teacherid={teacherId})''')
+    if len(middleName) != 0:
+        cur.execute(f"""SELECT 
+        (SELECT CONCAT_WS(' ', firstname, lastname, middlename) 
+        FROM student WHERE studentid = G.studentid) as studentname,
+        (SELECT subjectname FROM subject where subjectid=G.subjectid) as subject,
+        G.date,
+        G.grade 
+        FROM grade G 
+        WHERE teacherid = (SELECT teacherid FROM teacher 
+        WHERE firstname='{name}' and lastname='{lastName}' and middlename='{middleName}')""")
+    else:
+        cur.execute(f"""SELECT 
+               (SELECT CONCAT_WS(' ', firstname, lastname, middlename) 
+               FROM student WHERE studentid = G.studentid) as studentname,
+               (SELECT subjectname FROM subject where subjectid=G.subjectid) as subject,
+               G.date,
+               G.grade 
+               FROM grade G 
+               WHERE teacherid = (SELECT teacherid FROM teacher 
+               WHERE firstname='{name}' and lastname='{lastName}')""")
     result = cur.fetchall()
     cur.close()
     conn.close()
