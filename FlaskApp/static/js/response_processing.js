@@ -1,5 +1,4 @@
 export function subjects_response_process(result){
-    console.log(1);
     const ol = document.createElement("ol");
     for(let i = 0; i < result.length; i++){
         let el = document.createElement("li")
@@ -19,8 +18,6 @@ export function subjects_response_process(result){
 }
 
 export function students_response_process(response){
-        console.log(1);
-
         const tbl = document.createElement("table");
         const tblBody = document.createElement("tbody");
         let row = document.createElement("tr");
@@ -48,4 +45,35 @@ export function students_response_process(response){
         }
         outputElement.appendChild(tbl);
         tbl.setAttribute("border", "2");
+}
+
+export function grade_response_process(grades){
+        const tbl = document.createElement("table");
+        const tblBody = document.createElement("tbody");
+        for(let i = 0; i < grades.length;i++){
+            let row = document.createElement("tr");
+            let cell = Add_cell(grades[i].name);
+            row.appendChild(cell);
+            cell = Add_cell(grades[i].subject);
+            row.appendChild(cell);
+            cell = Add_cell(grades[i].grade);
+            row.appendChild(cell);
+            cell = Add_cell(grades[i].date);
+            row.appendChild(cell);
+            tblBody.appendChild(row);
+        }
+        tbl.appendChild(tblBody);
+        const outputElement = document.getElementById("output");
+        while (outputElement.firstChild) {
+          outputElement.removeChild(outputElement.firstChild);
+        }
+        outputElement.appendChild(tbl);
+        tbl.setAttribute("border", "2");
+}
+
+function Add_cell(el){
+    const cell = document.createElement("td");
+    let cellText = document.createTextNode(`${el}`);
+    cell.appendChild(cellText);
+    return cell;
 }
