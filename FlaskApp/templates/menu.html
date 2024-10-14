@@ -1,8 +1,24 @@
 <nav>
   <ul class="menu">
+    {% if current_user.is_authenticated %}
+      <li><a href="#">{% print(current_user.login) %}</a></li>
+      <li><a href="/logout">Logout</a></li>
+    {% else %}
+      <li><a href="/login">Login</a></li>
+    {% endif %}
+    {% if context != '/' %}
     <li><a href="/">Home</a></li>
-    <li><a href="/student">Student</a></li>
-    <li><a href="/teacher">Teacher</a></li>
+    {% endif %}
+    {% if context != '/student' %}
+    <li><a href="/student">Students</a></li>
+    {% endif %}
+    {% if context !='/teacher' %}
+    <li><a href="/teacher">Teachers</a></li>
+    {% endif %}
+    {% if current_user.user_type=='staff' and context!='/staff' %}
     <li><a href="#!">Staff</a></li>
+     {% endif %}
   </ul>
 </nav>
+
+<script>console.log(document.getElementById("context").value)</script>

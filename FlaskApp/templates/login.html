@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+         <link href="../static/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="body-center">
+    <form method="post" action="{{ url_for('login') }}" class="login-form">
+        <h2 class="form-title">Login</h2>
+        <label for="login" class="form-label">Login:</label>
+        <input type="text" id="login" name="login" class="form-input" required>
+
+        <label for="password" class="form-label">Password:</label>
+        <input type="password" id="password" name="password" class="form-input" required>
+
+        <label for="user_type" class="form-label">Login as:</label>
+        <select id="user_type" name="user_type" class="form-select">
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+        </select>
+
+        <button type="submit" class="form-button">Login</button>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="message-list">
+            {% for message in messages %}
+              <li class="message-item">{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </form>
+</body>
+</html>
