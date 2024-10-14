@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="popup-background" id="popup-background">
+<div class="grade-form-container">
+    <h2>Выставить оценку</h2>
+    <form action="/submit" method="post" id="grade-form">
+        <div class="text-field">
+        <label class="text-field__label" for="fio">ФИО ученика</label>
+        <input class="text-field__input" type="text" placeholder="ФИО ученика" name="fio" required>
+        </div>
+        <div class="text-field">
+        <label class="text-field__label" for="classname">Класс</label>
+        <input class="text-field__input" type="text" placeholder="Класс" name="classname" required>
+         </div>
+        <div class="text-field">
+        <label class="text-field__label" for="subject">Предмет</label>
+        <input class="text-field__input" type="text" placeholder="Предмет" name="subject" required>
+        </div>
+        <div class="text-field">
+        <label class="text-field__label" for="grade">Оценка</label>
+        <input class="text-field__input" type="number" placeholder="Оценка" name="grade" required>
+        </div>
+        <button class="c-button" style="background: #858585;" value="Cancel" onclick="window.closeGradeForm()" formnovalidate>Закрыть</button>
+        <button type="submit" class="c-button">Выставить</button>
+    </form>
+</div>
+</div>
+</body>
+</html>
+                    перенести для зарег.
+        let button = document.createElement("button");
+        button.classList.add("c-button");
+        button.classList.add("insert-button");
+        let text = document.createTextNode('Выставить оценку');
+        button.appendChild(text);
+        button.setAttribute('onclick','window.openGradeForm()')
+        outputElement.appendChild(button);
+
+async function addGrade(data) {
+    try {
+    let response = await fetch('teacher/add-grade', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    });
+    if(response.ok){
+        console.log('ok');
+    }else{
+
+    }
+    }catch(error){
+        console.log('Ошибка: ', error);
+    }
+}
+
+window.openGradeForm = openGradeForm;
+window.closeGradeForm = closeGradeForm;
+const gradeForm = document.getElementById("grade-form");
+gradeForm.addEventListener('submit', handleGradeFormSubmit);
+

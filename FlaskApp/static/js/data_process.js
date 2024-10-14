@@ -54,6 +54,8 @@ export function grade_response_process(grades){
             let row = document.createElement("tr");
             let cell = Add_cell(grades[i].name);
             row.appendChild(cell);
+            cell = Add_cell(grades[i].classname);
+            row.appendChild(cell);
             cell = Add_cell(grades[i].subject);
             row.appendChild(cell);
             cell = Add_cell(grades[i].grade);
@@ -68,7 +70,6 @@ export function grade_response_process(grades){
           outputElement.removeChild(outputElement.firstChild);
         }
         outputElement.appendChild(tbl);
-        tbl.setAttribute("border", "2");
 }
 
 function Add_cell(el){

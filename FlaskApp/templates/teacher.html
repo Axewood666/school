@@ -5,28 +5,30 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="module" src="../static/js/requests.js"></script>
 </head>
 <body>
-<div class="list-of-student-by-teacher">
+   <div id="menu-placeholder"></div>
+   <script>
+      $(document).ready(function() {
+          $('#menu-placeholder').load('templates/menu.html', function(response, status, xhr) {
+              if (status == "error") {
+                  console.error("Error loading the menu:", xhr.status, xhr.statusText);
+              }
+          });
+      });
+   </script>
+<div class="teacher-block">
+     <label class="text-field__label" for="teacher-fio">Введите ФИО преподователя</label>
     <div class="teacher-input-form">
-    <div class="text-field">
-     <label class="text-field__label" for="name">Имя</label>
-     <input class="text-field__input" type="text" id="name" name="Teacher_name" placeholder="Имя">
+     <input class="text-field__input" type="text" id="teacher-fio" name="teacherFio" required>
     </div>
-    <div class="text-field">
-     <label class="text-field__label" for="lastName">Фамилия</label>
-     <input class="text-field__input" type="text" id="lastName" name="Teacher_lastName" placeholder="Фамилия">
-    </div>
-    <div class="text-field">
-     <label class="text-field__label" for="middleName">Отчество</label>
-     <input class="text-field__input" type="text" id="middleName" name="Teacher_middleName" placeholder="Отчество">
-    </div>
+    <div class="teacher-buttons">
      <button class="c-button" onclick="window.List_of_students()">Класс</button>
      <button class="c-button" onclick="window.List_of_subjects()">Предметы</button>
      <button class="c-button" onclick="window.List_of_grades()">Оценки</button>
-     <div style="margin-top: 10px;" id="output"></div>
     </div>
-  <script type="module" src="../static/js/requests.js"></script>
+     <div style="margin-top: 10px;" id="output"></div>
 </div>
 </body>
 </html>

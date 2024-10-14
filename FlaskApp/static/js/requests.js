@@ -1,9 +1,10 @@
-import * as process from '/static/js/response_processing.js';
+import * as process from '/static/js/data_process.js';
 
 
 
-export function List_of_students() {
-    let data = fio();
+function List_of_students() {
+    let data = {'fio': document.getElementById("teacher-fio").value};
+    if(data.fio === "") return;
     $.ajax({
         url: '/teacher/students',
         type: 'POST',
@@ -13,13 +14,14 @@ export function List_of_students() {
         },
         error: function (error) {
             console.log(error);
-            document.getElementById("output").innerHTML = error.responseText;
+            document.getElementById("output").innerHTML = 'Преподаватель не найден';
         }
     });
 }
 
-export async function List_of_subjects() {
-    let data = fio();
+async function List_of_subjects() {
+    let data = {'fio': document.getElementById("teacher-fio").value};
+    if(data.fio === "") return;
     try {
         let response = await fetch('/teacher/subjects', {
             method: 'POST',
@@ -40,7 +42,8 @@ export async function List_of_subjects() {
 }
 
 async function List_of_grades(){
-    let data = fio();
+    let data = {'fio': document.getElementById("teacher-fio").value};
+    if(data.fio === "") return;
     try{
     let response = await fetch('/teacher/grades', {
     method: 'POST',
@@ -60,15 +63,31 @@ async function List_of_grades(){
     }
 }
 
-function fio() {
-    let name = document.getElementById('name').value;
-    let lastName = document.getElementById('lastName').value;
-    let middleName = document.getElementById('middleName').value;
-    return {
-        '_name': name,
-        '_lastName': lastName,
-        '_middleName': middleName
-    };
+function openGradeForm(){
+    document.getElementById("popup-background").style.display = "flex";
+}
+function closeGradeForm(){
+    event.preventDefault();
+    document.getElementById("popup-background").style.display = "none";
+}
+
+function handleGradeFormSubmit(event){
+    event.preventDefault();
+    document.getElementById("popup-background").style.display = "none";
+    const data = serializeForm(gradeForm);
+    addGrade(data);
+}
+
+function serializeForm(formNode){
+    const { elements } = formNode;
+    const data = Array.from(elements)
+    .filter(item => !!item.name)
+    .reduce((arr, el) => {
+        const {name, value} = el;
+        arr[name] = value
+        return arr;
+    }, {});
+    return data;
 }
 
 window.List_of_students = List_of_students;
