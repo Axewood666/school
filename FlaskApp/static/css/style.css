@@ -291,7 +291,9 @@ li.message-item {
 }
 
 .table-error {
-  width: 100%;
+  width: auto;
+  max-width: 400px;
+  min-width: 300px;
   border-collapse: collapse;
 }
 

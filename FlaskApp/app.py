@@ -3,8 +3,10 @@ import mypackage
 from flask import Flask, render_template, request, flash, redirect, url_for
 from configparser import ConfigParser
 from flask_login import LoginManager, login_required, logout_user, current_user, login_user
+from pages import pages
 
 app = Flask(__name__)
+app.register_blueprint(pages)
 urlconf = 'config/config.ini'
 config = ConfigParser()
 config.read(urlconf)
@@ -18,16 +20,16 @@ login_manager.init_app(app)
 def load_user(user_id):
     try:
         user_type, id_ = user_id.split('_')
-        user = mypackage.db_utils.User.get_user_by_id(id_, user_type)
+        user = mypackage.model.User.get_user_by_id(id_, user_type)
         return user
     except Exception as e:
         print(e)
         return None
 
 
-@app.route("/")
-def Main():
-    return render_template('index.html', context="/")
+# @app.route("/")
+# def Main():
+#     return render_template('index.html', context="/")
 
 
 @app.route("/templates/menu.html")
@@ -41,10 +43,10 @@ def login():
         login = request.form['login']
         password = request.form['password']
         user_type = request.form['user_type']
-        user = mypackage.db_utils.User.get_user(login, password, user_type)
+        user = mypackage.model.User.get_user(login, password, user_type)
         if user:
             login_user(user)
-            return redirect(url_for('Main'))
+            return redirect(url_for('pages.Main'))
         flash('Invalid username or password')
     return render_template('login.html')
 
@@ -53,18 +55,17 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('Main'))
+    return redirect(url_for('pages.Main'))
 
 
 @app.route("/teacher")
 def Teacher():
-    return render_template('teacher.html', context="/teacher")
+    return render_template('teacher/teacher.html', context="/teacher")
 
 
 @app.route("/teacher/students", methods=['POST'])
 def List_of_students():  #сделать через 1 запрос
     fio = request.form.get('fio')
-    print(fio)
     result = mypackage.db_utils.get_class_id_by_teacher_name(fio.split())
     if result == 404:
         return 'Преподавателя с таким фио не существует, либо у него нет класса!', 404
@@ -87,20 +88,7 @@ def teacher_required(f):
 def Teacher_profile():
     id_ = current_user.id.split('_')[1]
     fio = mypackage.db_utils.get_teacher_fio(id_)
-    fio = " ".join(fio)
-    subjects = mypackage.db_utils.get_subjects_by_teacher(fio.split())
-    classid = mypackage.db_utils.get_class_id_by_teacher_name(fio.split())
-    class_list = mypackage.db_utils.get_class_list_by_classid(classid[0])
-    grades = mypackage.db_utils.get_grades_by_teacher(fio.split())
-    subjects = [row[0] for row in subjects]
-    jsonSubjects = {'subjects': subjects}
-    jsonSubjects = json.dumps(jsonSubjects)
-    fields = ['name', 'classname', 'subject', 'grade', 'date']
-    dicts_data = [dict(zip(fields, values)) for values in grades]
-    for i in range(len(dicts_data)):
-        dicts_data[i]['date'] = dicts_data[i]['date'].isoformat()
-    jsonGrades = json.dumps(dicts_data)
-    return render_template("teacher-profile.html", subjects=jsonSubjects, class_list=class_list, grades=jsonGrades)
+    return render_template("teacher/teacher-profile.html", fio=fio)
 
 
 @app.route("/teacher/subjects", methods=['POST'])
