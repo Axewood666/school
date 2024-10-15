@@ -15,6 +15,7 @@ function List_of_students() {
         error: function (error) {
             console.log(error);
             document.getElementById("output").innerHTML = 'Преподаватель не найден';
+
         }
     });
 }

@@ -120,24 +120,39 @@ def get_teacher_fio(id):
     conn.close()
     return fio
 
-# def Add_grade(json_data):
-#     conn = get_db_connection()
-#     cur = conn.cursor()
-#     cur.execute(f"""INSERT INTO grade (studentid, subjectid, date, grade, teacherid)
-#     VALUES (
-#     (SELECT studentid FROM student
-#     WHERE firstname='Carol' and middlename='C.' and lastname='Davis' LIMIT 1),
-#     (SELECT subjectid FROM subject
-#     WHERE subjectname='History' LIMIT 1),
-#     CURRENT_DATE,
-#     5,
-#     (SELECT teacherid FROM teacher
-#     WHERE firstname='John'
-#     and lastname='Doe'
-#     and middlename='A.'))""")
-#     cur.close()
-#     conn.close()
-#     return 1
+def Add_grade(json_data, teacherid,  teacher_fio):
+    fio = json_data['fio'].split()
+    error = 0
+    if len(fio) > 2:
+        middlename = f"and middlename='{fio[2]}'"
+    else:
+        middlename = ""
+    if len(fio) >= 2:
+        subjects = [row[0] for row in get_subjects_by_teacher(teacher_fio)]
+        if  json_data['subject'] in subjects:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            try:
+                cur.execute(f"""INSERT INTO grade (studentid, subjectid, date, grade, teacherid)
+                VALUES (
+                (SELECT studentid FROM student
+                WHERE firstname='{fio[1]}' {middlename} and lastname='{fio[0]}'
+                 and classid=(SELECT classid FROM class WHERE classname='{json_data['classname']}' LIMIT 1) LIMIT 1),
+                (SELECT subjectid FROM subject
+                WHERE subjectname='{json_data['subject']}' LIMIT 1),
+                CURRENT_DATE,
+                {json_data['grade']}, {teacherid})""")
+                conn.commit()
+            except Exception as e:
+                error = e
+            cur.close()
+            conn.close()
+            return error
+        else:
+            error = f"Вы не преподаёте {json_data['subject']}"
+    else:
+        error = f"Ученик {json_data['fio']} не найден"
+    return error
 
 class User(UserMixin):
     def __init__(self, id_, login, user_type):

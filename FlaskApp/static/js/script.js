@@ -1,3 +1,5 @@
+import * as process from '/static/js/data_process.js';
+
 async function addGrade(data) {
     try {
     let response = await fetch('teacher/add-grade', {
@@ -6,9 +8,15 @@ async function addGrade(data) {
         body: JSON.stringify(data)
     });
     if(response.ok){
-        console.log('ok');
+        let result = await response.json();
+        let isError = (result.pop()).error
+        if(isError){
+            process.print_error(isError)
+        }else{
+            process.grade_response_process(result)
+        }
     }else{
-
+        console.log('no OK')
     }
     }catch(error){
         console.log('Ошибка: ', error);

@@ -1,11 +1,15 @@
 import json
 import mypackage
 from flask import Flask, render_template, request, flash, redirect, url_for
-
+from configparser import ConfigParser
 from flask_login import LoginManager, login_required, logout_user, current_user, login_user
 
 app = Flask(__name__)
-app.secret_key = 'hardkey!'
+urlconf = 'config/config.ini'
+config = ConfigParser()
+config.read(urlconf)
+secret_key = config['flask']['secret_key']
+app.secret_key = secret_key
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -74,7 +78,6 @@ def teacher_required(f):
         if current_user.user_type != 'teacher':
             return redirect(url_for('Main'))
         return f(*args, **kwargs)
-
     return decorated_function
 
 
@@ -126,17 +129,27 @@ def List_of_grades():
     json_data = json.dumps(dicts_data)
     return json_data
 
-
-# @app.route("/teacher/add-grade", methods=['POST'])
-# def Add_grade():
-#     json_data = request.get_json()
-#     mypackage.db_utils.Add_grade(json_data)
-#     # fio = json_data['fio']
-#     # fio = fio.split()
-#     # class_name = json_data['classname']
-#     # subject = json_data['subject']
-#     # grade = json_data['grade']
-#     return "test", 200
+@login_required
+@teacher_required
+@app.route("/profile/teacher/add-grade", methods=['POST'])
+def Add_grade():
+    json_data = request.get_json()
+    if current_user.user_type=='teacher':
+        teacherid = current_user.id.split('_')[1]
+        teacherfio = mypackage.db_utils.get_teacher_fio(teacherid)
+        error = mypackage.db_utils.Add_grade(json_data, teacherid, teacherfio)
+        if error:
+            json_res = [{'error': str(error)}]
+        else:
+            result = mypackage.db_utils.get_grades_by_teacher(teacherfio)
+            fields = ['name', 'classname', 'subject', 'grade', 'date']
+            dicts_data = [dict(zip(fields, values)) for values in result]
+            for i in range(len(dicts_data)):
+                dicts_data[i]['date'] = dicts_data[i]['date'].isoformat()
+            dicts_data.append({'error': 0})
+            json_res = dicts_data
+        return json.dumps(json_res)
+    return "Нет доступа", 404
 
 if __name__ == "__main__":
     app.run()

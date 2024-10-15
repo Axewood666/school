@@ -44,7 +44,6 @@ export function students_response_process(response){
           outputElement.removeChild(outputElement.firstChild);
         }
         outputElement.appendChild(tbl);
-        tbl.setAttribute("border", "2");
 }
 
 export function grade_response_process(grades){
@@ -77,4 +76,27 @@ function Add_cell(el){
     let cellText = document.createTextNode(`${el}`);
     cell.appendChild(cellText);
     return cell;
+}
+
+export function print_error(error){
+    const tbl = document.createElement("table");
+    const tblBody = document.createElement("tbody");
+    const headCell = document.createElement("th");
+    const cellText = document.createTextNode("ERROR")
+    let row = document.createElement("tr");
+    headCell.appendChild(cellText);
+    row.appendChild(headCell);
+    tblBody.appendChild(row);
+    row = document.createElement("tr");
+    let cell = Add_cell(error)
+    cell.classList.add("error-message")
+    row.appendChild(cell)
+    tblBody.appendChild(row)
+    tbl.appendChild(tblBody)
+    const outputElement = document.getElementById("output");
+    while (outputElement.firstChild) {
+    outputElement.removeChild(outputElement.firstChild);
+    }
+    tbl.classList.add("table-error")
+    outputElement.appendChild(tbl);
 }
