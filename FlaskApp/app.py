@@ -9,6 +9,7 @@ app.secret_key = 'hardkey!'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
 @login_manager.user_loader
 def load_user(user_id):
     try:
@@ -18,7 +19,6 @@ def load_user(user_id):
     except Exception as e:
         print(e)
         return None
-
 
 
 @app.route("/")
@@ -37,7 +37,6 @@ def login():
         login = request.form['login']
         password = request.form['password']
         user_type = request.form['user_type']
-
         user = mypackage.db_utils.User.get_user(login, password, user_type)
         if user:
             login_user(user)
@@ -45,16 +44,14 @@ def login():
         flash('Invalid username or password')
     return render_template('login.html')
 
-# @app.route('/dashboard')
-# @login_required  # Ограничиваем доступ к этой странице для незалогиненных пользователей
-# def dashboard():
-#     return f'Hello, {current_user.login}! You are logged in as a {current_user.user_type}.'
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('Main'))
+
+
 @app.route("/teacher")
 def Teacher():
     return render_template('teacher.html', context="/teacher")
@@ -63,12 +60,44 @@ def Teacher():
 @app.route("/teacher/students", methods=['POST'])
 def List_of_students():  #сделать через 1 запрос
     fio = request.form.get('fio')
+    print(fio)
     result = mypackage.db_utils.get_class_id_by_teacher_name(fio.split())
     if result == 404:
         return 'Преподавателя с таким фио не существует, либо у него нет класса!', 404
     else:
         result = mypackage.db_utils.get_class_list_by_classid(result[0])
     return result
+
+
+def teacher_required(f):
+    def decorated_function(*args, **kwargs):
+        if current_user.user_type != 'teacher':
+            return redirect(url_for('Main'))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+@app.route("/profile/teacher")
+@login_required
+@teacher_required
+def Teacher_profile():
+    id_ = current_user.id.split('_')[1]
+    fio = mypackage.db_utils.get_teacher_fio(id_)
+    fio = " ".join(fio)
+    subjects = mypackage.db_utils.get_subjects_by_teacher(fio.split())
+    classid = mypackage.db_utils.get_class_id_by_teacher_name(fio.split())
+    class_list = mypackage.db_utils.get_class_list_by_classid(classid[0])
+    grades = mypackage.db_utils.get_grades_by_teacher(fio.split())
+    subjects = [row[0] for row in subjects]
+    jsonSubjects = {'subjects': subjects}
+    jsonSubjects = json.dumps(jsonSubjects)
+    fields = ['name', 'classname', 'subject', 'grade', 'date']
+    dicts_data = [dict(zip(fields, values)) for values in grades]
+    for i in range(len(dicts_data)):
+        dicts_data[i]['date'] = dicts_data[i]['date'].isoformat()
+    jsonGrades = json.dumps(dicts_data)
+    return render_template("teacher-profile.html", subjects=jsonSubjects, class_list=class_list, grades=jsonGrades)
 
 
 @app.route("/teacher/subjects", methods=['POST'])
@@ -92,7 +121,6 @@ def List_of_grades():
         return {"error": "Преподавателя с таким фио не существует, либо он не выставлял оценки!"}, 404
     fields = ['name', 'classname', 'subject', 'grade', 'date']
     dicts_data = [dict(zip(fields, values)) for values in result]
-    print(dicts_data)
     for i in range(len(dicts_data)):
         dicts_data[i]['date'] = dicts_data[i]['date'].isoformat()
     json_data = json.dumps(dicts_data)

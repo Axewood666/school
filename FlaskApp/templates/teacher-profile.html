@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="../static/css/style.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="module" src="../static/js/script.js"></script>
+    <script type="module" src="../static/js/data_process.js"></script>
+</head>
+<body>
+   <div id="menu-placeholder"></div>
+   <script>
+      $(document).ready(function() {
+          $('#menu-placeholder').load('../templates/menu.html', function(response, status, xhr) {
+              if (status == "error") {
+                  console.error("Error loading the menu:", xhr.status, xhr.statusText);
+              }
+          });
+      });
+   </script>
+<script type="module">
+    import { grade_response_process, subjects_response_process, students_response_process } from '../static/js/data_process.js';
+    window.grade_response_process = grade_response_process;
+    window.subjects_response_process = subjects_response_process;
+    window.students_response_process = students_response_process;
+    window.grades = {{ grades | tojson }};
+    window.subjects = {{ subjects | tojson }};
+    window.class_list = {{ class_list | tojson }};
+</script>
+<div class="teacher-block">
+    <div class="teacher-buttons">
+     <button class="c-button" onclick="window.students_response_process(window.class_list)">Мой класс</button>
+     <button class="c-button" onclick="window.subjects_response_process((JSON.parse(window.subjects)).subjects)">Мои предметы</button>
+     <button class="c-button" onclick="window.grade_response_process(JSON.parse(window.grades))">Выставленные оценки</button>
+        <button class="c-button" onclick="window.openGradeForm()">Выставить оценку</button>
+    </div>
+     <div style="margin-top: 10px;" id="output"></div>
+</div>
+<div class="popup-background" id="popup-background">
+<div class="grade-form-container">
+    <h2>Выставить оценку</h2>
+    <form action="/submit" method="post" id="grade-form">
+        <div class="text-field">
+        <label class="text-field__label" for="fio">ФИО ученика</label>
+        <input class="text-field__input" type="text" placeholder="ФИО ученика" name="fio" required>
+        </div>
+        <div class="text-field">
+        <label class="text-field__label" for="classname">Класс</label>
+        <input class="text-field__input" type="text" placeholder="Класс" name="classname" required>
+         </div>
+        <div class="text-field">
+        <label class="text-field__label" for="subject">Предмет</label>
+        <input class="text-field__input" type="text" placeholder="Предмет" name="subject" required>
+        </div>
+        <div class="text-field">
+        <label class="text-field__label" for="grade">Оценка</label>
+        <input class="text-field__input" type="number" placeholder="Оценка" name="grade" required>
+        </div>
+        <button class="c-button" style="background: #858585;" value="Cancel" onclick="window.closeGradeForm()" formnovalidate>Закрыть</button>
+        <button type="submit" class="c-button">Выставить</button>
+    </form>
+</div>
+</div>
+</body>
+</html>
+

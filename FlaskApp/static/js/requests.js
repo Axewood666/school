@@ -63,32 +63,7 @@ async function List_of_grades(){
     }
 }
 
-function openGradeForm(){
-    document.getElementById("popup-background").style.display = "flex";
-}
-function closeGradeForm(){
-    event.preventDefault();
-    document.getElementById("popup-background").style.display = "none";
-}
 
-function handleGradeFormSubmit(event){
-    event.preventDefault();
-    document.getElementById("popup-background").style.display = "none";
-    const data = serializeForm(gradeForm);
-    addGrade(data);
-}
-
-function serializeForm(formNode){
-    const { elements } = formNode;
-    const data = Array.from(elements)
-    .filter(item => !!item.name)
-    .reduce((arr, el) => {
-        const {name, value} = el;
-        arr[name] = value
-        return arr;
-    }, {});
-    return data;
-}
 
 window.List_of_students = List_of_students;
 window.List_of_subjects = List_of_subjects;
