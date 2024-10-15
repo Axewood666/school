@@ -1,9 +1,31 @@
-import * as process from '/static/js/response_processing.js';
+import * as process from '/static/js/data_process.js';
 
+export async function addGrade(data) {
+    try {
+    let response = await fetch('teacher/add-grade', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    });
+    if(response.ok){
+        let result = await response.json();
+        let isError = (result.pop()).error
+        if(isError){
+            process.print_error(isError)
+        }else{
+            process.grade_response_process(result)
+        }
+    }else{
+        console.log('error')
+    }
+    }catch(error){
+        console.log('Ошибка: ', error);
+    }
+}
 
-
-export function List_of_students() {
-    let data = fio();
+export function List_of_students(fio) {
+    let data = {'fio': fio};
+    if(data.fio === "") return;
     $.ajax({
         url: '/teacher/students',
         type: 'POST',
@@ -13,13 +35,15 @@ export function List_of_students() {
         },
         error: function (error) {
             console.log(error);
-            document.getElementById("output").innerHTML = error.responseText;
+            document.getElementById("output").innerHTML = 'Преподаватель не найден';
+
         }
     });
 }
 
-export async function List_of_subjects() {
-    let data = fio();
+export async function List_of_subjects(fio) {
+    let data = {'fio': fio};
+    if(data.fio === "") return;
     try {
         let response = await fetch('/teacher/subjects', {
             method: 'POST',
@@ -39,8 +63,9 @@ export async function List_of_subjects() {
     }
 }
 
-async function List_of_grades(){
-    let data = fio();
+export async function List_of_grades(fio){
+    let data = {'fio': fio};
+    if(data.fio === "") return;
     try{
     let response = await fetch('/teacher/grades', {
     method: 'POST',
@@ -58,17 +83,6 @@ async function List_of_grades(){
     } catch (error){
         console.error('Ошибка: ', error)
     }
-}
-
-function fio() {
-    let name = document.getElementById('name').value;
-    let lastName = document.getElementById('lastName').value;
-    let middleName = document.getElementById('middleName').value;
-    return {
-        '_name': name,
-        '_lastName': lastName,
-        '_middleName': middleName
-    };
 }
 
 window.List_of_students = List_of_students;
