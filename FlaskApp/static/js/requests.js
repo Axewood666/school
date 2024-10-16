@@ -31,11 +31,11 @@ export function List_of_students(fio) {
         type: 'POST',
         data: data,
         success: function (response) {
+            console.log(response);
             process.students_response_process(response);
         },
         error: function (error) {
-            console.log(error);
-            document.getElementById("output").innerHTML = 'Преподаватель не найден';
+            process.print_error(JSON.parse(error.responseText)[0].error)
 
         }
     });
@@ -56,7 +56,8 @@ export async function List_of_subjects(fio) {
             let result = await response.json();
             process.subjects_response_process(result.subjects);
         } else {
-            document.getElementById("output").innerHTML = "Преподаватель не найден";
+            let errorResult = await response.json();
+            process.print_error(errorResult.error)
         }
     } catch (error) {
         console.error('Ошибка: ', error);
@@ -78,7 +79,8 @@ export async function List_of_grades(fio){
         let result = await response.json();
         process.grade_response_process(result)
     }else{
-        document.getElementById("output").innerHTML = "Преподаватель не выставлял оценки";
+        let errorResult = await response.json();
+        process.print_error(errorResult.error)
     }
     } catch (error){
         console.error('Ошибка: ', error)

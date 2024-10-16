@@ -18,55 +18,58 @@ def get_db_connection():
 
 
 def get_class_id_by_teacher_name(fio):
-    conn = get_db_connection()
-    cur = conn.cursor()
+    result = 0
     if len(fio) > 2:
         middlename = f",'{fio[2]}'"
     else:
         middlename = ''
     if len(fio) >= 2:
-        name = fio[1]
-        lastname = fio[0]
-        cur.execute(f"SELECT * FROM get_class_id_by_teacher_name('{name}','{lastname}'{middlename})")
-    if cur.rowcount == 0:
-        result = 404
-    else:
-        result = cur.fetchone()
-    cur.close()
-    conn.close()
+        try:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            name = fio[1]
+            lastname = fio[0]
+            cur.execute(f"SELECT * FROM get_class_id_by_teacher_name('{name}','{lastname}'{middlename})")
+            result = cur.fetchone()
+            cur.close()
+            conn.close()
+        except:
+            result = 0
     return result
 
 
 def get_class_list_by_classid(classid):
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute(f'''SELECT
-                s.firstname,
-                s.middlename,
-                s.lastname,
-                CAST(s.BirthDate AS TEXT),
-                s.Gender,
-                s.Address,
-                s.PhoneNumber,
-                s.Email,
-                c.ClassName
-            FROM
-                Student s
-            JOIN
-                Class c ON s.ClassID = c.ClassID
-            WHERE
-                s.CLASSID={classid}''')
-    result = cur.fetchall()
-    headers = tuple([i[0] for i in cur.description])
-    result.insert(0, headers)
-    cur.close()
-    conn.close()
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(f'''SELECT
+                    s.firstname,
+                    s.middlename,
+                    s.lastname,
+                    CAST(s.BirthDate AS TEXT),
+                    s.Gender,
+                    s.Address,
+                    s.PhoneNumber,
+                    s.Email,
+                    c.ClassName
+                FROM
+                    Student s
+                JOIN
+                    Class c ON s.ClassID = c.ClassID
+                WHERE
+                    s.CLASSID={classid}''')
+        result = cur.fetchall()
+        headers = tuple([i[0] for i in cur.description])
+        result.insert(0, headers)
+        cur.close()
+        conn.close()
+    except:
+        result = 0
     return result
 
 
 def get_subjects_by_teacher(fio):
-    conn = get_db_connection()
-    cur = conn.cursor()
+    result = 0
     if len(fio) > 2:
         middlename = fio[2]
         query = f"and middlename='{middlename}'"
@@ -74,20 +77,24 @@ def get_subjects_by_teacher(fio):
         name = fio[1]
         lastname = fio[0]
         query = ""
-        cur.execute(f"""SELECT subjectname FROM subject
-                 WHERE subjectid IN
-                 (SELECT subjectid FROM teachersubject
-                 WHERE  teacherid=(SELECT teacherid FROM teacher
-                 WHERE firstname='{name}' and lastname='{lastname}' {query}))""")
-    result = cur.fetchall()
-    cur.close()
-    conn.close()
+        try:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute(f"""SELECT subjectname FROM subject
+                     WHERE subjectid IN
+                     (SELECT subjectid FROM teachersubject
+                     WHERE  teacherid=(SELECT teacherid FROM teacher
+                     WHERE firstname='{name}' and lastname='{lastname}' {query}))""")
+            result = cur.fetchall()
+            cur.close()
+            conn.close()
+        except:
+            result = 0
     return result
 
 
 def get_grades_by_teacher(fio):
-    conn = get_db_connection()
-    cur = conn.cursor()
+    result = 0
     if len(fio) > 2:
         middlename = fio[2]
         query = f"and middlename='{middlename}'"
@@ -95,20 +102,25 @@ def get_grades_by_teacher(fio):
         name = fio[1]
         lastname = fio[0]
         query = ""
-        cur.execute(f"""SELECT
-               (SELECT CONCAT_WS(' ', firstname, lastname, middlename)
-               FROM student WHERE studentid = G.studentid) as studentname,
-               (SELECT classname FROM class
-               WHERE classid=(SELECT classid FROM student WHERE studentid=G.studentid)) as classname,
-               (SELECT subjectname FROM subject where subjectid=G.subjectid) as subject,
-               G.grade,
-               G.date
-               FROM grade G
-               WHERE teacherid = (SELECT teacherid FROM teacher
-               WHERE firstname='{name}' and lastname='{lastname}' {query})""")
-    result = cur.fetchall()
-    cur.close()
-    conn.close()
+        try:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute(f"""SELECT
+                   (SELECT CONCAT_WS(' ', firstname, lastname, middlename)
+                   FROM student WHERE studentid = G.studentid) as studentname,
+                   (SELECT classname FROM class
+                   WHERE classid=(SELECT classid FROM student WHERE studentid=G.studentid)) as classname,
+                   (SELECT subjectname FROM subject where subjectid=G.subjectid) as subject,
+                   G.grade,
+                   G.date
+                   FROM grade G
+                   WHERE teacherid = (SELECT teacherid FROM teacher
+                   WHERE firstname='{name}' and lastname='{lastname}' {query})""")
+            result = cur.fetchall()
+            cur.close()
+            conn.close()
+        except:
+            result = 0
     return result
 
 
@@ -132,9 +144,9 @@ def Add_grade(json_data, teacherid, teacher_fio):
     if len(fio) >= 2:
         subjects = [row[0] for row in get_subjects_by_teacher(teacher_fio)]
         if json_data['subject'] in subjects:
-            conn = get_db_connection()
-            cur = conn.cursor()
             try:
+                conn = get_db_connection()
+                cur = conn.cursor()
                 cur.execute(f"""INSERT INTO grade (studentid, subjectid, date, grade, teacherid)
                 VALUES (
                 (SELECT studentid FROM student
@@ -145,10 +157,10 @@ def Add_grade(json_data, teacherid, teacher_fio):
                 CURRENT_DATE,
                 {json_data['grade']}, {teacherid})""")
                 conn.commit()
+                cur.close()
+                conn.close()
             except Exception as e:
                 error = e
-            cur.close()
-            conn.close()
             return error
         else:
             error = f"Вы не преподаёте {json_data['subject']}"

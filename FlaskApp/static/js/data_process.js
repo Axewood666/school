@@ -32,7 +32,11 @@ export function students_response_process(response){
             row = document.createElement("tr");
             for (let j = 0; j < response[i].length; j++){
                 const cell = document.createElement("td");
-                let cellText = document.createTextNode(`${response[i][j]}`);
+                let text = response[i][j];
+                if(text == null){
+                    text = '';
+                }
+                let cellText = document.createTextNode(`${text}`);
                 cell.appendChild(cellText);
                 row.appendChild(cell);
             }
