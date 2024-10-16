@@ -12,6 +12,8 @@ else:
     from .requireds import teacher_required
 
 api = Blueprint('api', __name__)
+
+
 @api.route("/teacher/students", methods=['POST'])
 def list_of_students():
     fio = request.form.get('fio')
@@ -20,7 +22,21 @@ def list_of_students():
         return [{'error': 'Преподавателя с таким фио не существует, либо у него нет класса'}], 404
     else:
         result = db.db_utils.get_class_list_by_classid(result[0])
-    return result
+        if not current_user.is_authenticated:
+            new_result = []
+            [new_result.append(el[:3] + (el[4],)) for el in result]
+            new_result.append(result[1][-1])
+            return new_result
+        elif current_user.user_type == 'student':
+            new_result = []
+            [new_result.append(el[:3] + (el[4],) + (el[6],)) for el in result]
+            new_result.append(result[1][-1])
+            return new_result
+        elif current_user.user_type == 'teacher' or current_user.user_type == 'staff':
+            new_result = []
+            [new_result.append(el[:-1]) for el in result]
+            new_result.append(result[1][-1])
+            return new_result
 
 
 @api.route("/teacher/subjects", methods=['POST'])
@@ -50,6 +66,7 @@ def list_of_grades():
     return json_data
 
 
+@login_required
 @teacher_required
 @api.route("/profile/teacher/add-grade", methods=['POST'])
 def add_grade():

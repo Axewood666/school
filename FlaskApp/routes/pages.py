@@ -7,7 +7,6 @@ if __name__ == '__main__':
 else:
     from .requireds import teacher_required
 
-
 import FlaskApp.db_package as db
 
 pages = Blueprint('pages', __name__)
@@ -24,6 +23,7 @@ def Menu():
     return render_template('menu.html', context=path)
 
 
+# login
 @pages.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -45,14 +45,24 @@ def logout():
     return redirect(url_for('pages.main'))
 
 
+# teachers
+
+
 @pages.route("/teacher")
 def Teacher():
     return render_template('teacher/teacher.html', context="/teacher")
 
 
 @pages.route("/profile/teacher")
+@login_required
 @teacher_required
 def Teacher_profile():
     id_ = current_user.id.split('_')[1]
     fio = db.db_utils.get_teacher_fio(id_)
     return render_template("teacher/teacher-profile.html", fio=fio)
+
+
+# students
+
+
+# @pages.route("student")

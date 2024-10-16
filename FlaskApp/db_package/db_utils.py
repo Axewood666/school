@@ -59,8 +59,11 @@ def get_class_list_by_classid(classid):
                 WHERE
                     s.CLASSID={classid}''')
         result = cur.fetchall()
-        headers = tuple([i[0] for i in cur.description])
-        result.insert(0, headers)
+        if (len(result) != 0):
+            headers = tuple([i[0] for i in cur.description])
+            result.insert(0, headers)
+        else:
+            result = 0
         cur.close()
         conn.close()
     except:

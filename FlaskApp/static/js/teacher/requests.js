@@ -1,4 +1,4 @@
-import * as process from '/static/js/data_process.js';
+import * as process from '/static/js/teacher/data_process.js';
 
 export async function addGrade(data) {
     try {
@@ -31,7 +31,6 @@ export function List_of_students(fio) {
         type: 'POST',
         data: data,
         success: function (response) {
-            console.log(response);
             process.students_response_process(response);
         },
         error: function (error) {

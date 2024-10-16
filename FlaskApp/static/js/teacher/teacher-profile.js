@@ -1,4 +1,4 @@
-import { addGrade } from '/static/js/requests.js';
+import { addGrade } from '/static/js/teacher/requests.js';
 
 function serializeForm(formNode){
     const { elements } = formNode;

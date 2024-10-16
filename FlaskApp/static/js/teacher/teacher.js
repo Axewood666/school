@@ -1,4 +1,4 @@
-import {List_of_grades, List_of_students, List_of_subjects} from '/static/js/requests.js';
+import {List_of_grades, List_of_students, List_of_subjects} from '/static/js/teacher/requests.js';
 
 function getListOfStudents(){
     let data = document.getElementById("teacher-fio").value;
