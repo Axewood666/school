@@ -1,9 +1,9 @@
 <nav>
   <ul class="menu">
-    {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated and context!=('/profile/'+current_user.user_type)%}
       <li><a href="profile/{%print(current_user.user_type)%}">{% print(current_user.login) %}</a></li>
       <li><a href="/logout">Logout</a></li>
-    {% else %}
+    {% elif not current_user.is_authenticated%}
       <li><a href="/login">Login</a></li>
     {% endif %}
     {% if context != '/' %}
@@ -20,5 +20,3 @@
      {% endif %}
   </ul>
 </nav>
-
-<script>console.log(document.getElementById("context").value)</script>

@@ -4,13 +4,17 @@ from flask import Blueprint, request
 from flask_login import current_user, login_required
 
 import FlaskApp.db_package as db
-from .requireds import teacher_required
+
+if __name__ == '__main__':
+    from requireds import teacher_required
+else:
+    from .requireds import teacher_required
 
 api = Blueprint('api', __name__)
 
 
 @api.route("/teacher/students", methods=['POST'])
-def List_of_students():  #сделать через 1 запрос
+def list_of_students():
     fio = request.form.get('fio')
     result = db.db_utils.get_class_id_by_teacher_name(fio.split())
     if result == 404:
@@ -21,19 +25,19 @@ def List_of_students():  #сделать через 1 запрос
 
 
 @api.route("/teacher/subjects", methods=['POST'])
-def List_of_subjects():
+def list_of_subjects():
     json_fio = request.get_json()
     fio = json_fio['fio']
     result = db.db_utils.get_subjects_by_teacher(fio.split())
     if len(result) == 0:
         return {"error": "Преподавателя с таким фио не существует, либо он не ведёт предметы!"}, 404
     subjects = [row[0] for row in result]
-    jsonRes = {'subjects': subjects}
-    return json.dumps(jsonRes)
+    json_res = {'subjects': subjects}
+    return json.dumps(json_res)
 
 
 @api.route("/teacher/grades", methods=['POST'])
-def List_of_grades():
+def list_of_grades():
     json_fio = request.get_json()
     fio = json_fio['fio']
     result = db.db_utils.get_grades_by_teacher(fio.split())
@@ -46,10 +50,10 @@ def List_of_grades():
     json_data = json.dumps(dicts_data)
     return json_data
 
-@login_required
+
 @teacher_required
 @api.route("/profile/teacher/add-grade", methods=['POST'])
-def Add_grade():
+def add_grade():
     json_data = request.get_json()
     if current_user.user_type == 'teacher':
         teacher_id = current_user.id.split('_')[1]

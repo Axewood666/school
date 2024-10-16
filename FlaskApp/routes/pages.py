@@ -2,20 +2,26 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from flask_login import login_user, login_required, logout_user, current_user
 
-from .requireds import teacher_required
+if __name__ == '__main__':
+    from requireds import teacher_required
+else:
+    from .requireds import teacher_required
+
+
 import FlaskApp.db_package as db
 
 pages = Blueprint('pages', __name__)
 
 
 @pages.route("/")
-def Main():
+def main():
     return render_template('index.html', context="/")
 
 
-@pages.route("/templates/menu.html")
+@pages.route("/templates/menu.html", methods=['GET'])
 def Menu():
-    return render_template('menu.html')
+    path = request.args.get('path', '/')
+    return render_template('menu.html', context=path)
 
 
 @pages.route('/login', methods=['GET', 'POST'])
@@ -27,7 +33,7 @@ def login():
         user = db.model.User.get_user(login, password, user_type)
         if user:
             login_user(user)
-            return redirect(url_for('pages.Main'))
+            return redirect(url_for('pages.main'))
         flash('Invalid username or password')
     return render_template('login.html')
 
@@ -36,7 +42,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('pages.Main'))
+    return redirect(url_for('pages.main'))
 
 
 @pages.route("/teacher")
@@ -45,7 +51,6 @@ def Teacher():
 
 
 @pages.route("/profile/teacher")
-@login_required
 @teacher_required
 def Teacher_profile():
     id_ = current_user.id.split('_')[1]

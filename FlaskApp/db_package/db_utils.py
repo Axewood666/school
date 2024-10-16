@@ -1,12 +1,13 @@
 from configparser import ConfigParser
 import psycopg2
 
-urlconf  = 'config/config.ini'
-config =ConfigParser()
+urlconf = 'config/config.ini'
+config = ConfigParser()
 config.read(urlconf)
 user_db = config['login_db']['user_db']
 password_db = config['login_db']['password_db']
 name_db = config['login_db']['database_name']
+
 
 def get_db_connection():
     conn = psycopg2.connect(host='localhost',
@@ -15,18 +16,18 @@ def get_db_connection():
                             password=password_db)
     return conn
 
+
 def get_class_id_by_teacher_name(fio):
     conn = get_db_connection()
     cur = conn.cursor()
     if len(fio) > 2:
+        middlename = f",'{fio[2]}'"
+    else:
+        middlename = ''
+    if len(fio) >= 2:
         name = fio[1]
         lastname = fio[0]
-        middlename = fio[2]
-        cur.execute(f"SELECT * FROM get_class_id_by_teacher_name('{name}','{lastname}','{middlename}')")
-    if len(fio) == 2:
-        name = fio[1]
-        lastname = fio[0]
-        cur.execute(f"SELECT * FROM get_class_id_by_teacher_name('{name}','{lastname}')")
+        cur.execute(f"SELECT * FROM get_class_id_by_teacher_name('{name}','{lastname}'{middlename})")
     if cur.rowcount == 0:
         result = 404
     else:
@@ -110,6 +111,7 @@ def get_grades_by_teacher(fio):
     conn.close()
     return result
 
+
 def get_teacher_fio(id):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -119,7 +121,8 @@ def get_teacher_fio(id):
     conn.close()
     return fio
 
-def Add_grade(json_data, teacherid,  teacher_fio):
+
+def Add_grade(json_data, teacherid, teacher_fio):
     fio = json_data['fio'].split()
     error = 0
     if len(fio) > 2:
@@ -128,7 +131,7 @@ def Add_grade(json_data, teacherid,  teacher_fio):
         middlename = ""
     if len(fio) >= 2:
         subjects = [row[0] for row in get_subjects_by_teacher(teacher_fio)]
-        if  json_data['subject'] in subjects:
+        if json_data['subject'] in subjects:
             conn = get_db_connection()
             cur = conn.cursor()
             try:
