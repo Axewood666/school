@@ -7,13 +7,15 @@ from flask_login import current_user, login_required
 import FlaskApp.db_package as db
 
 if __name__ == '__main__':
-    from requireds import teacher_required
+    from requireds import teacher_required, staff_required, student_required, employee_required
 else:
-    from .requireds import teacher_required
+    from .requireds import teacher_required, staff_required, student_required, employee_required
 
 api = Blueprint('api', __name__)
 
 
+@login_required
+@staff_required
 @api.route("/teacher/students", methods=['POST'])
 def list_of_students():
     fio = request.form.get('fio')
@@ -22,23 +24,14 @@ def list_of_students():
         return [{'error': 'Преподавателя с таким фио не существует, либо у него нет класса'}], 404
     else:
         result = db.db_utils.get_class_list_by_classid(result[0])
-        if not current_user.is_authenticated:
-            new_result = []
-            [new_result.append(el[:3] + (el[4],)) for el in result]
-            new_result.append(result[1][-1])
-            return new_result
-        elif current_user.user_type == 'student':
-            new_result = []
-            [new_result.append(el[:3] + (el[4],) + (el[6],)) for el in result]
-            new_result.append(result[1][-1])
-            return new_result
-        elif current_user.user_type == 'teacher' or current_user.user_type == 'staff':
-            new_result = []
-            [new_result.append(el[:-1]) for el in result]
-            new_result.append(result[1][-1])
-            return new_result
+        new_result = []
+        [new_result.append(el[:-1]) for el in result]
+        new_result.append(result[1][-1])
+        return new_result
 
 
+@login_required
+@staff_required
 @api.route("/teacher/subjects", methods=['POST'])
 def list_of_subjects():
     json_fio = request.get_json()
@@ -51,6 +44,8 @@ def list_of_subjects():
     return json.dumps(json_res)
 
 
+@login_required
+@staff_required
 @api.route("/teacher/grades", methods=['POST'])
 def list_of_grades():
     json_fio = request.get_json()
@@ -85,3 +80,29 @@ def add_grade():
         dicts_data.append({'error': 0})
         json_res = dicts_data
     return json.dumps(json_res)
+
+
+@login_required
+@student_required
+@api.route("/profile/student/class", methods=['GET'])
+def list_of_classmates():
+    classmates = db.db_utils.get_student_classmates(current_user.id.split('_')[1])
+    if not classmates:
+        return {'error': "Возникла ошибка"}
+    fields = ['Имя', 'Отчество', 'Фамилия', 'Номер телефона', 'Электронная почта']
+    dicts_data = [dict(zip(fields, values)) for values in classmates]
+    json_classmates = json.dumps(dicts_data)
+    return json_classmates
+@login_required
+@student_required
+@api.route("/profile/student/grades", methods=['GET'])
+def list_of_student_grades():
+    grades = db.db_utils.get_student_grades(current_user.id.split('_')[1])
+    if not grades:
+        return {'error': "Возникла ошибка"}
+    fields = ['Предмет', 'Оценка', 'Преподаватель', 'Дата']
+    dicts_data = [dict(zip(fields, values)) for values in grades]
+    for i in range(len(dicts_data)):
+        dicts_data[i]['Дата'] = dicts_data[i]['Дата'].isoformat()
+    json_grades = json.dumps(dicts_data)
+    return json_grades

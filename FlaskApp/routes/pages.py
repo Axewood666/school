@@ -1,11 +1,13 @@
+import json
+
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from flask_login import login_user, login_required, logout_user, current_user
 
 if __name__ == '__main__':
-    from requireds import teacher_required
+    from requireds import teacher_required, student_required, employee_required, staff_required
 else:
-    from .requireds import teacher_required
+    from .requireds import teacher_required, student_required, employee_required, staff_required
 
 import FlaskApp.db_package as db
 
@@ -33,6 +35,8 @@ def login():
         user = db.model.User.get_user(login, password, user_type)
         if user:
             login_user(user)
+            if current_user.user_type == 'student':
+                return redirect(url_for('pages.profile_student'))
             return redirect(url_for('pages.main'))
         flash('Invalid username or password')
     return render_template('login.html')
@@ -47,22 +51,43 @@ def logout():
 
 # teachers
 
-
+@staff_required
 @pages.route("/teacher")
-def Teacher():
+def teacher():
     return render_template('teacher/teacher.html', context="/teacher")
 
 
 @pages.route("/profile/teacher")
 @login_required
 @teacher_required
-def Teacher_profile():
+def profile_student():
     id_ = current_user.id.split('_')[1]
     fio = db.db_utils.get_teacher_fio(id_)
     return render_template("teacher/teacher-profile.html", fio=fio)
 
 
-# students
+# student
+
+@login_required
+@employee_required
+@pages.route("/student")
+def student():
+    return render_template("student/student.html", context="/student")
 
 
-# @pages.route("student")
+@login_required
+@student_required
+@pages.route("/profile/student")
+def profile_student():
+    student_data = db.db_utils.get_student_info(current_user.id.split('_')[1])
+    if student_data:
+        fields = ['Имя', 'Отчество', 'Фамилия', 'Дата рождения', 'Пол', 'Адрес', 'Номер телефона', 'Электронная почта', 'Класс', 'Классный руководитель']
+        dicts_data = dict(zip(fields, student_data))
+        dicts_data['Дата рождения'] = dicts_data['Дата рождения'].isoformat()
+        dicts_data['error'] = 0
+        json_student = json.dumps(dicts_data)
+    else:
+        dicts_data = dict()
+        dicts_data['error'] = 1
+        json_student = json.dumps(dicts_data)
+    return render_template("student/student-profile.html", student=json_student)

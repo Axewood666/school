@@ -17,6 +17,7 @@ def get_db_connection():
     return conn
 
 
+# teacher
 def get_class_id_by_teacher_name(fio):
     result = 0
     if len(fio) > 2:
@@ -170,3 +171,59 @@ def Add_grade(json_data, teacherid, teacher_fio):
     else:
         error = f"Ученик {json_data['fio']} не найден"
     return error
+
+
+# student
+def get_student_info(student_id):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(f"""SELECT S.firstname, S.middlename, S.lastname, S.birthdate, 
+            S.gender, S.address, S.phonenumber, S.email, 
+            (SELECT classname FROM class WHERE classid=S.classid),
+                (SELECT CONCAT_WS(' ', firstname, lastname, middlename)
+                FROM teacher
+                WHERE teacherid=(SELECT teacherid FROM class WHERE classid=S.classid))
+        FROM student S WHERE studentid={student_id}""")
+        result = cur.fetchone()
+        cur.close()
+        conn.close()
+    except:
+        result = 0
+    return result
+
+
+def get_student_classmates(student_id):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(f"""SELECT firstname, middlename, lastname, phonenumber, email
+         FROM student WHERE classid=(SELECT classid FROM student WHERE studentid={student_id})""")
+        result = cur.fetchall()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print(e)
+        result = 0
+    return result
+
+
+def get_student_grades(student_id):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(f"""SELECT
+           G.grade,
+           (SELECT subjectname FROM subject where subjectid=G.subjectid) as subject,
+           (SELECT CONCAT_WS(' ', firstname, lastname, middlename)
+           FROM teacher WHERE teacherid = G.teacherid) as teachername,
+           G.date
+           FROM grade G
+           WHERE studentid={student_id}""")
+        result = cur.fetchall()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print(e)
+        result = 0
+    return result
