@@ -66,12 +66,28 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 20px;
+    font-weight: 600;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    font-size: 16px;
     padding: 10px;
     width: 100%;
     transition: background-color 0.5s ease;
 }
+
+.grade-button{
+  margin-bottom: 5px;
+  color: #f5f6ff !important;
+  background: #1d49aa !important;
+}
+.grade-button:hover {
+   background: blue !important;
+}
+
+.grade-button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 4px #cbd6ee !important;
+}
+
 .close-button
 {
     background: #858585 !important;
@@ -83,7 +99,7 @@
 }
 
  .toggle-button:hover {
-            background-color: #0051a8;
+    background-color: #0051a8;
 }
 
 .toggle-button .arrow {
@@ -226,8 +242,8 @@
   cursor: pointer;
 }
 
-.c-button:hover {
 
+.c-button:hover {
    background: blue;
 }
 
@@ -388,25 +404,27 @@ li.message-item {
 }
 
 .table-error th {
-  background-color: #f8d7da; /* Светло-красный фон для заголовка */
-  color: #721c24; /* Глубокий красный цвет для текста */
+  background-color: #f8d7da;
+  color: #721c24;
   padding: 10px;
   text-align: left;
-  border-bottom: 2px solid #f5c6cb; /* Красная граница снизу */
+  border-bottom: 2px solid #f5c6cb;
 }
+
+
 
 .table-error td {
   padding: 10px;
-  border-bottom: 1px solid #f1f1f1; /* Лёгкая серая граница снизу */
+  border-bottom: 1px solid #f1f1f1;
 }
 
 .table-error .error-message {
-  color: #721c24; /* Глубокий красный цвет для текста ошибки */
-  background-color: #f8d7da; /* Светло-красный фон */
+  color: #721c24;
+  background-color: #f8d7da;
 }
 
 .table-error tr:nth-child(even) td {
-  background-color: #f9f9f9; /* Слабый серый для чётных строк */
+  background-color: #f9f9f9;
 }
 
 .hide-table{

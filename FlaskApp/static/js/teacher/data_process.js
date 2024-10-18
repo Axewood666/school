@@ -83,9 +83,9 @@ export function grade_response_process(grades){
         const tblBody = document.createElement("tbody");
         for(let i = 0; i < grades.length;i++){
             let row = document.createElement("tr");
-            let cell = Add_cell(grades[i].name);
+            let cell = Add_cell(grades[i].classname);
             row.appendChild(cell);
-            cell = Add_cell(grades[i].classname);
+            cell = Add_cell(grades[i].name);
             row.appendChild(cell);
             cell = Add_cell(grades[i].subject);
             row.appendChild(cell);

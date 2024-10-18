@@ -1,3 +1,5 @@
+import { addGrade } from '/static/js/teacher/requests.js';
+
 export function print_error(error){
     const tbl = document.createElement("table");
     const tblBody = document.createElement("tbody");
@@ -55,6 +57,7 @@ export function closeGradeForm(){
 export function handleGradeFormSubmit(event){
     event.preventDefault();
     document.getElementById("popup-background").style.display = "none";
+    const gradeForm = document.getElementById("grade-form");
     const data = serializeForm(gradeForm);
     addGrade(data);
 }

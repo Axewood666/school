@@ -1,9 +1,10 @@
 import * as process from '/static/js/teacher/data_process.js';
 import {print_error, clearElement, Add_cell} from '/static/js/script.js';
+import { students_response_process } from '/static/js/student/data-process.js';
 
 export async function addGrade(data) {
     try {
-    let response = await fetch('teacher/add-grade', {
+    let response = await fetch('/profile/teacher/add-grade', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
@@ -14,7 +15,7 @@ export async function addGrade(data) {
         if(isError){
             print_error(isError)
         }else{
-            process.grade_response_process(result)
+            students_response_process(result)
         }
     }else{
         console.log('error')

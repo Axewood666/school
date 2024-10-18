@@ -70,16 +70,24 @@ def add_grade():
     teacher_fio = db.db_utils.get_teacher_fio(teacher_id)
     error = db.db_utils.Add_grade(json_data, teacher_id, teacher_fio)
     if error:
-        json_res = [{'error': str(error)}]
+        return {'error': str(error)}, 404
     else:
-        result = db.db_utils.get_grades_by_teacher(teacher_fio)
-        fields = ['name', 'classname', 'subject', 'grade', 'date']
-        dicts_data = [dict(zip(fields, values)) for values in result]
-        for i in range(len(dicts_data)):
-            dicts_data[i]['date'] = dicts_data[i]['date'].isoformat()
-        dicts_data.append({'error': 0})
-        json_res = dicts_data
-    return json.dumps(json_res)
+        arr_fio = json_data['fio'].split()
+        dict_fio = {'firstname': arr_fio[1], 'lastname': arr_fio[0]}
+        if len(arr_fio) > 2:
+            dict_fio['middlename'] = arr_fio[2]
+        result = db.db_utils.get_student_grades_by_fio(dict_fio)
+        if result:
+            fields = ['grade', 'subject', 'teacherfio', 'date']
+            dicts_data = [dict(zip(fields, values)) for values in result]
+            print(dicts_data)
+            for i in range(len(dicts_data)):
+                dicts_data[i]['date'] = dicts_data[i]['date'].isoformat()
+            dicts_data.append({'error': 0})
+            json_res = dicts_data
+        else:
+            return {'error': 'Не удалось получить оценки студента'}, 404
+        return json.dumps(json_res)
 
 
 @login_required
@@ -137,3 +145,5 @@ def class_list_by_student_fio():
         dicts_data[i]['Дата'] = dicts_data[i]['Дата'].isoformat()
     json_grades = json.dumps(dicts_data)
     return json_grades
+
+

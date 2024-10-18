@@ -1,6 +1,7 @@
 import { getClass, getGradesByFio } from '/static/js/student/requests.js';
 import { toggleStudentInfo } from '/static/js/student/data-process.js';
 import {print_error, clearElement} from '/static/js/script.js';
+import { handleGradeFormSubmit, closeGradeForm, openGradeForm } from '/static/js/script.js';
 
 function studentInfoDisplay(open = 0){
     if (open) {
@@ -57,6 +58,21 @@ function getClassList(){
     }
 }
 
+function openGradeFormWithFIO(){
+    const firstname = document.getElementById('student-name').innerHTML;
+    const middlename = document.getElementById('student-mname').innerHTML;
+    const lastname = document.getElementById('student-lastname').innerHTML;
+    const fio = lastname + ' ' + firstname + ' ' + middlename;
+    const className = document.getElementById('class-name').value;
+    document.getElementById('classname').value = className;
+    document.getElementById('fio').value = fio;
+    openGradeForm();
+}
+
 window.studentInfoDisplay = studentInfoDisplay;
 window.getStudent = getStudent;
 window.getClassList = getClassList;
+const gradeForm = document.getElementById("grade-form");
+gradeForm.addEventListener('submit', handleGradeFormSubmit);
+window.openGradeFormWithFIO = openGradeFormWithFIO;
+window.closeGradeForm = closeGradeForm;

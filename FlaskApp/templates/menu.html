@@ -12,10 +12,10 @@
     {% if context != '/' %}
     <li><a href="/">Home</a></li>
     {% endif %}
-    {% if context != '/student' and current_user.user_type in ['staff', 'teacher'] %}
+    {% if context != '/student' and current_user.is_authenticated and current_user.user_type in ['staff', 'teacher'] %}
     <li><a href="/student">Students</a></li>
     {% endif %}
-    {% if context !='/teacher' and current_user.user_type == 'staff' %}
+    {% if context !='/teacher' and current_user.is_authenticated and current_user.user_type == 'staff' %}
     <li><a href="/teacher">Teachers</a></li>
     {% endif %}
     {% if current_user.user_type=='staff' and context!='/staff' %}
