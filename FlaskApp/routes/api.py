@@ -93,6 +93,8 @@ def list_of_classmates():
     dicts_data = [dict(zip(fields, values)) for values in classmates]
     json_classmates = json.dumps(dicts_data)
     return json_classmates
+
+
 @login_required
 @student_required
 @api.route("/profile/student/grades", methods=['GET'])
@@ -102,6 +104,35 @@ def list_of_student_grades():
         return {'error': "Возникла ошибка"}
     fields = ['Предмет', 'Оценка', 'Преподаватель', 'Дата']
     dicts_data = [dict(zip(fields, values)) for values in grades]
+    for i in range(len(dicts_data)):
+        dicts_data[i]['Дата'] = dicts_data[i]['Дата'].isoformat()
+    json_grades = json.dumps(dicts_data)
+    return json_grades
+
+
+@login_required
+@teacher_required
+@api.route("/student/class-list", methods=['POST'])
+def class_list_by_name():
+    json_data = request.get_json()
+    class_name = json_data['className']
+    class_list = db.db_utils.get_class_by_class_name(class_name)
+    fields = ['firstname', 'middlename', 'lastname', 'phone number', 'email']
+    dicts_data = [dict(zip(fields, values)) for values in class_list]
+    json_class_list = json.dumps(dicts_data)
+    return json_class_list
+
+
+@login_required
+@teacher_required
+@api.route("/student/student-grades", methods=['POST'])
+def class_list_by_student_fio():
+    json_fio = request.get_json()
+    grades_tuple = db.db_utils.get_student_grades_by_fio(json_fio)
+    if not grades_tuple or len(grades_tuple) == 0:
+        return {'error': "У ученика нет оценок"}
+    fields = ['Предмет', 'Оценка', 'Преподаватель', 'Дата']
+    dicts_data = [dict(zip(fields, values)) for values in grades_tuple]
     for i in range(len(dicts_data)):
         dicts_data[i]['Дата'] = dicts_data[i]['Дата'].isoformat()
     json_grades = json.dumps(dicts_data)

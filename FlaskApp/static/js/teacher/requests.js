@@ -1,4 +1,5 @@
 import * as process from '/static/js/teacher/data_process.js';
+import {print_error, clearElement, Add_cell} from '/static/js/script.js';
 
 export async function addGrade(data) {
     try {
@@ -11,7 +12,7 @@ export async function addGrade(data) {
         let result = await response.json();
         let isError = (result.pop()).error
         if(isError){
-            process.print_error(isError)
+            print_error(isError)
         }else{
             process.grade_response_process(result)
         }
@@ -34,7 +35,7 @@ export function List_of_students(fio) {
             process.students_response_process(response);
         },
         error: function (error) {
-            process.print_error(JSON.parse(error.responseText)[0].error)
+            print_error(JSON.parse(error.responseText)[0].error)
 
         }
     });
@@ -56,7 +57,7 @@ export async function List_of_subjects(fio) {
             process.subjects_response_process(result.subjects);
         } else {
             let errorResult = await response.json();
-            process.print_error(errorResult.error)
+            print_error(errorResult.error)
         }
     } catch (error) {
         console.error('Ошибка: ', error);
@@ -79,7 +80,7 @@ export async function List_of_grades(fio){
         process.grade_response_process(result)
     }else{
         let errorResult = await response.json();
-        process.print_error(errorResult.error)
+        print_error(errorResult.error)
     }
     } catch (error){
         console.error('Ошибка: ', error)

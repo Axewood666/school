@@ -1,3 +1,5 @@
+import {print_error, clearElement, Add_cell} from '/static/js/script.js';
+
 export function subjects_response_process(result){
     const ol = document.createElement("ol");
     for(let i = 0; i < result.length; i++){
@@ -76,12 +78,6 @@ function createDataRows(data) {
     });
 }
 
-function clearElement(element) {
-    while (element.firstChild) {
-        element.removeChild(element.firstChild);
-    }
-}
-
 export function grade_response_process(grades){
         const tbl = document.createElement("table");
         const tblBody = document.createElement("tbody");
@@ -105,30 +101,4 @@ export function grade_response_process(grades){
         outputElement.appendChild(tbl);
 }
 
-function Add_cell(el){
-    const cell = document.createElement("td");
-    let cellText = document.createTextNode(`${el}`);
-    cell.appendChild(cellText);
-    return cell;
-}
 
-export function print_error(error){
-    const tbl = document.createElement("table");
-    const tblBody = document.createElement("tbody");
-    const headCell = document.createElement("th");
-    const cellText = document.createTextNode("ERROR")
-    let row = document.createElement("tr");
-    headCell.appendChild(cellText);
-    row.appendChild(headCell);
-    tblBody.appendChild(row);
-    row = document.createElement("tr");
-    let cell = Add_cell(error)
-    cell.classList.add("error-message")
-    row.appendChild(cell)
-    tblBody.appendChild(row)
-    tbl.appendChild(tblBody)
-    const outputElement = document.getElementById("output");
-    clearElement(outputElement);
-    tbl.classList.add("table-error")
-    outputElement.appendChild(tbl);
-}

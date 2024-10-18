@@ -1,32 +1,5 @@
 import { addGrade } from '/static/js/teacher/requests.js';
-
-function serializeForm(formNode){
-    const { elements } = formNode;
-    const data = Array.from(elements)
-    .filter(item => !!item.name)
-    .reduce((arr, el) => {
-        const {name, value} = el;
-        arr[name] = value
-        return arr;
-    }, {});
-    return data;
-}
-
-function openGradeForm(){
-    document.getElementById("popup-background").style.display = "flex";
-}
-function closeGradeForm(){
-    event.preventDefault();
-    document.getElementById("popup-background").style.display = "none";
-}
-
-function handleGradeFormSubmit(event){
-    event.preventDefault();
-    document.getElementById("popup-background").style.display = "none";
-    const data = serializeForm(gradeForm);
-    addGrade(data);
-}
-
+import { handleGradeFormSubmit, closeGradeForm, openGradeForm } from '/static/js/script.js';
 
 const gradeForm = document.getElementById("grade-form");
 gradeForm.addEventListener('submit', handleGradeFormSubmit);

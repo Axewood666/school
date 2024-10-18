@@ -77,10 +77,11 @@ def get_subjects_by_teacher(fio):
     if len(fio) > 2:
         middlename = fio[2]
         query = f"and middlename='{middlename}'"
+    else:
+        query = ""
     if len(fio) >= 2:
         name = fio[1]
         lastname = fio[0]
-        query = ""
         try:
             conn = get_db_connection()
             cur = conn.cursor()
@@ -227,3 +228,42 @@ def get_student_grades(student_id):
         print(e)
         result = 0
     return result
+
+
+def get_class_by_class_name(class_name):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(f"""SELECT firstname, middlename, lastname, phonenumber, email 
+            FROM student 
+            WHERE classid=(SELECT classid FROM class WHERE classname='{class_name}')""")
+        class_tuple = cur.fetchall()
+        cur.close()
+        conn.close()
+    except:
+        class_tuple = 0
+    return class_tuple
+
+
+def get_student_grades_by_fio(fio):
+    grades_tuple = 0
+    if len(fio) > 2:
+        middlename = fio['middlename']
+        query = f"and middlename='{middlename}'"
+    else:
+        query = ""
+    if len(fio) >= 2:
+        try:
+            name = fio['firstname']
+            lastname = fio['lastname']
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute(f"""SELECT studentid FROM student WHERE firstname='{name}'
+             and lastname='{lastname}' {query}""")
+            student_id = cur.fetchone()
+            grades_tuple = get_student_grades(student_id[0])
+            cur.close()
+            conn.close()
+        except:
+            grades_tuple = 0
+    return grades_tuple

@@ -29,18 +29,21 @@
 </script>
 <body>
     <div id="menu-placeholder"></div>
-    <div class="student-info">
-        <h2>Мои данные</h2>
-        <div class="student-field" id="student-name"><strong>Имя:</strong> </div>
-        <div class="student-field" id="student-mname"><strong>Отчество:</strong> </div>
-        <div class="student-field" id="student-lastname"><strong>Фамилия:</strong> </div>
-        <div class="student-field" id="birthdate"><strong>Дата рождения:</strong> </div>
-        <div class="student-field" id="gender"><strong>Пол:</strong> </div>
-        <div class="student-field" id="address"><strong>Адрес:</strong> </div>
-        <div class="student-field" id="phone"><strong>Номер телефона:</strong> </div>
-        <div class="student-field" id="mail"><strong>Электронная почта:</strong> </div>
-        <div class="student-field" id="className"><strong>Класс:</strong> </div>
-        <div class="student-field" id="teacherFio"><strong>Классный руководитель:</strong> </div>
+    <div class="toggle-head">
+        <button class="toggle-button" id="toggle-button" onclick="window.toggleStudentInfo()">
+            <span id="toggle-text">Мои данные</span><span class="arrow">▼</span></button>
+        <div class="student-info student-info-toggle" id="student-info">
+            <div class="student-field" id="student-name"><strong>Имя:</strong> </div>
+            <div class="student-field" id="student-mname"><strong>Отчество:</strong> </div>
+            <div class="student-field" id="student-lastname"><strong>Фамилия:</strong> </div>
+            <div class="student-field" id="birthdate"><strong>Дата рождения:</strong> </div>
+            <div class="student-field" id="gender"><strong>Пол:</strong> </div>
+            <div class="student-field" id="address"><strong>Адрес:</strong> </div>
+            <div class="student-field" id="phone"><strong>Номер телефона:</strong> </div>
+            <div class="student-field" id="mail"><strong>Электронная почта:</strong> </div>
+            <div class="student-field" id="className"><strong>Класс:</strong> </div>
+            <div class="student-field" id="teacherFio"><strong>Классный руководитель:</strong> </div>
+        </div>
     </div>
     <div class="center-buttons">
      <button class="c-button" onclick="window.getClassmates()">Мой класс</button>
