@@ -1,8 +1,10 @@
-import * as process from '/static/js/data_process.js';
+import * as process from '/static/js/teacher/data_process.js';
+import {print_error, clearElement, Add_cell} from '/static/js/script.js';
+import { students_response_process } from '/static/js/student/data-process.js';
 
 export async function addGrade(data) {
     try {
-    let response = await fetch('teacher/add-grade', {
+    let response = await fetch('/profile/teacher/add-grade', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data)
@@ -11,9 +13,9 @@ export async function addGrade(data) {
         let result = await response.json();
         let isError = (result.pop()).error
         if(isError){
-            process.print_error(isError)
+            print_error(isError)
         }else{
-            process.grade_response_process(result)
+            students_response_process(result)
         }
     }else{
         console.log('error')
@@ -34,8 +36,7 @@ export function List_of_students(fio) {
             process.students_response_process(response);
         },
         error: function (error) {
-            console.log(error);
-            document.getElementById("output").innerHTML = 'Преподаватель не найден';
+            print_error(JSON.parse(error.responseText)[0].error)
 
         }
     });
@@ -56,7 +57,8 @@ export async function List_of_subjects(fio) {
             let result = await response.json();
             process.subjects_response_process(result.subjects);
         } else {
-            document.getElementById("output").innerHTML = "Преподаватель не найден";
+            let errorResult = await response.json();
+            print_error(errorResult.error)
         }
     } catch (error) {
         console.error('Ошибка: ', error);
@@ -78,7 +80,8 @@ export async function List_of_grades(fio){
         let result = await response.json();
         process.grade_response_process(result)
     }else{
-        document.getElementById("output").innerHTML = "Преподаватель не выставлял оценки";
+        let errorResult = await response.json();
+        print_error(errorResult.error)
     }
     } catch (error){
         console.error('Ошибка: ', error)

@@ -3,10 +3,18 @@
 <head>
     <link href="../static/css/style.css" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="module" src="../static/js/forpages/teacher.js"></script>
+    <title>Teachers</title>
+    <script type="module" src="../static/js/teacher/teacher.js"></script>
     <script src="/static/js/menu.js"></script>
+    <script src=
+    "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+    <script src=
+    "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    </script>
+    <link href=
+    "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/dot-luv/jquery-ui.css"
+          rel="stylesheet" type="text/css"/>
 </head>
 <body>
    <div id="menu-placeholder"></div>
@@ -15,7 +23,7 @@
     <div class="teacher-input-form">
      <input class="text-field__input" type="text" id="teacher-fio" name="teacherFio" required>
     </div>
-    <div class="teacher-buttons">
+    <div class="center-buttons">
      <button class="c-button" onclick="window.getListOfStudents()">Класс</button>
      <button class="c-button" onclick="window.getListOfSubjects()">Предметы</button>
      <button class="c-button" onclick="window.getListOfGrades()">Оценки</button>

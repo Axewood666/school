@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
-         <link href="../static/css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="../static/css/style.css" rel="stylesheet">
 </head>
 <body class="body-center">
     <form method="post" action="{{ url_for('pages.login') }}" class="login-form">
@@ -20,6 +19,7 @@
         <select id="user_type" name="user_type" class="form-select">
             <option value="student">Student</option>
             <option value="teacher">Teacher</option>
+            <option value="staff">Staff</option>
         </select>
 
         <button type="submit" class="form-button">Login</button>

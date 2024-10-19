@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student</title>
+    <link href="../static/css/style.css" rel="stylesheet">
+    <script src="/static/js/menu.js"></script>
+    <script type="module" src="/static/js/student/student.js"></script>
+    <script src=
+    "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    </script>
+    <script src=
+    "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    </script>
+    <link href=
+    "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/dot-luv/jquery-ui.css"
+      rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div id="menu-placeholder"></div>
+  <label class="text-field__label">Введите названия класса</label>
+    <div class="teacher-input-form">
+     <input class="text-field__input" style="width: 75px; min-width: 75px" type="text" id="class-name" name="class-name" required>
+    </div>
+    <div class="center-buttons">
+     <button class="c-button" onclick="window.getClassList()">Список класса</button>
+    </div>
+    <div class="toggle-head" style="" id="toggle-head">
+        <div class="student-info student-info-toggle" id="student-info">
+            <div class="student-field"><strong>Имя: </strong><span id="student-name"></span></div>
+            <div class="student-field" ><strong>Отчество: </strong> <span id="student-mname"></span></div>
+            <div class="student-field" ><strong>Фамилия: </strong><span id="student-lastname"></span> </div>
+            <div class="student-field"><strong>Номер телефона: </strong><span id="phone"></span> </div>
+            <div class="student-field" ><strong>Электронная почта: </strong><span id="mail"></span> </div>
+            {% if current_user.is_authenticated and current_user.user_type in ['teacher'] %}
+            <button class="grade-button toggle-button" onclick="window.openGradeFormWithFIO()"><span>Выставить оценку</span></button>
+            {% endif %}
+            <button class="toggle-button close-button" id="toggle-button" onclick="window.studentInfoDisplay()">
+            <span id="toggle-text">Закрыть</span></button>
+        </div>
+    </div>
+     <div style="margin-top: 10px;" id="output"></div>
+     <div style="margin-top: 10px;" id="output-class"></div>
+{% if current_user.is_authenticated and current_user.user_type in ['teacher'] %}
+<div class="popup-background" id="popup-background">
+<div class="grade-form-container">
+    <h2>Выставить оценку</h2>
+    <form action="/submit" method="post" id="grade-form">
+        <div class="text-field">
+        <label class="text-field__label" for="fio">ФИО ученика</label>
+        <input class="text-field__input" type="text" placeholder="ФИО ученика" id="fio" name="fio" required>
+        </div>
+        <div class="text-field">
+        <label class="text-field__label" for="classname">Класс</label>
+        <input class="text-field__input" type="text" placeholder="Класс" id="classname" name="classname" required>
+         </div>
+        <div class="text-field">
+        <label class="text-field__label" for="subject">Предмет</label>
+        <input class="text-field__input" type="text" placeholder="Предмет" id="subject" name="subject" required>
+        </div>
+        <div class="text-field">
+        <label class="text-field__label" for="grade">Оценка</label>
+        <input class="text-field__input" type="number" placeholder="Оценка" id="grade" name="grade" required>
+        </div>
+        <button class="c-button close-button" value="Cancel" onclick="window.closeGradeForm()" formnovalidate>Закрыть</button>
+        <button type="submit" class="c-button">Выставить</button>
+    </form>
+</div>
+</div>
+{% endif %}
+</body>
+</html>

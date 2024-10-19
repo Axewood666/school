@@ -3,11 +3,10 @@
 <head>
     <link href="../static/css/style.css" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Profile</title>
     <script src="/static/js/menu.js"></script>
-    <script type="module" src="../static/js/forpages/script.js"></script>
-    <script type="module" src="../static/js/requests.js"></script>
+    <script type="module" src="../static/js/teacher/teacher-profile.js"></script>
+    <script type="module" src="../static/js/teacher/requests.js"></script>
 </head>
 <body>
    <div id="menu-placeholder"></div>
@@ -20,13 +19,13 @@
     window.fio = fio
 </script>
 <div class="teacher-block">
-    <div class="teacher-buttons">
+    <div class="center-buttons">
      <button class="c-button" onclick="window.List_of_students(window.fio)">Мой класс</button>
      <button class="c-button" onclick="window.List_of_subjects(window.fio)">Мои предметы</button>
      <button class="c-button" onclick="window.List_of_grades(window.fio)">Выставленные оценки</button>
         <button class="c-button" onclick="window.openGradeForm()">Выставить оценку</button>
     </div>
-     <div style="margin-top: 10px;" id="output"></div>
+     <div id="output"></div>
 </div>
 <div class="popup-background" id="popup-background">
 <div class="grade-form-container">
@@ -48,7 +47,7 @@
         <label class="text-field__label" for="grade">Оценка</label>
         <input class="text-field__input" type="number" placeholder="Оценка" id="grade" name="grade" required>
         </div>
-        <button class="c-button" style="background: #858585;" value="Cancel" onclick="window.closeGradeForm()" formnovalidate>Закрыть</button>
+        <button class="c-button close-button" value="Cancel" onclick="window.closeGradeForm()" formnovalidate>Закрыть</button>
         <button type="submit" class="c-button">Выставить</button>
     </form>
 </div>

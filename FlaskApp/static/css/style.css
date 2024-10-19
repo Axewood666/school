@@ -28,12 +28,12 @@
     font-size: 22px;
     color: #777;
     text-decoration: none;
-    transition: all 0.45s;
+    transition: all 0.6s;
   }
 
   &:hover {
     background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2ZXJzaW9uPSIxLjEi%0D%0AIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhs%0D%0AaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIKCSB3aWR0%0D%0AaD0iMzkwcHgiIGhlaWdodD0iNTBweCIgdmlld0JveD0iMCAwIDM5MCA1MCIgZW5hYmxlLWJhY2tn%0D%0Acm91bmQ9Im5ldyAwIDAgMzkwIDUwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHBhdGggZmlsbD0i%0D%0Abm9uZSIgc3Ryb2tlPSIjZDk0ZjVjIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLW1pdGVybGlt%0D%0AaXQ9IjEwIiBkPSJNMCw0Ny41ODVjMCwwLDk3LjUsMCwxMzAsMAoJYzEzLjc1LDAsMjguNzQtMzgu%0D%0ANzc4LDQ2LjE2OC0xOS40MTZDMTkyLjY2OSw0Ni41LDI0My42MDMsNDcuNTg1LDI2MCw0Ny41ODVj%0D%0AMzEuODIxLDAsMTMwLDAsMTMwLDAiLz4KPC9zdmc+Cg==");
-    animation: line 1s;
+    animation: line 1.5s;
   }
 
   &:hover a {
@@ -51,6 +51,105 @@
   }
 }
 
+.toggle-head{
+    padding: 10px;
+    width: 400px;
+    margin: 10px auto;
+}
+
+.toggle-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #D3D4DA;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    width: 100%;
+    transition: background-color 0.5s ease;
+}
+
+.grade-button{
+  margin-bottom: 5px;
+  color: #f5f6ff !important;
+  background: #1d49aa !important;
+}
+.grade-button:hover {
+   background: blue !important;
+}
+
+.grade-button:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 4px #cbd6ee !important;
+}
+
+.close-button
+{
+    background: #858585 !important;
+}
+
+.close-button:hover
+{
+    background: #ec5353 !important;
+}
+
+ .toggle-button:hover {
+    background-color: #0051a8;
+}
+
+.toggle-button .arrow {
+    margin-left: 10px;
+    font-size: 20px;
+    transition: transform 0.5s ease;
+}
+
+.expanded .arrow {
+    transform: rotate(180deg) !important;
+}
+
+.toggle-button:hover {
+    background-color: #0056b3;
+}
+
+.student-info-toggle {
+    padding: 0px !important;
+    transition: all 0.5s ease-out;
+    max-height: 0 !important;
+    border: none !important;
+}
+
+.student-info {
+    overflow: hidden;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #D3D4DA;
+    transition: all 0.5s ease-out;
+    max-height: 700px;
+}
+
+#toggle-text{
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.student-field {
+    padding-left: 10px;
+    margin-bottom: 10px;
+    font-size: 19px;
+    color: #444;
+    font-weight: 450;
+}
+
+.student-field strong {
+    font-weight: bold;
+    color: #000;
+}
 
 .popup-background{
     display: none;
@@ -87,7 +186,7 @@
   text-align: center;
 }
 
-.teacher-buttons{
+.center-buttons{
   display: flex;
   justify-content: center;
 }
@@ -138,13 +237,14 @@
   border: 0;
   margin: 5px;
   border-radius: 5px;
-  background: blue;
+  background: #1d49aa;
   padding: 8px 16px;
   cursor: pointer;
 }
 
+
 .c-button:hover {
-  background: #1d49aa;
+   background: blue;
 }
 
 .c-button:focus {
@@ -153,6 +253,12 @@
 }
 
 #output{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#output-class{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -298,28 +404,38 @@ li.message-item {
 }
 
 .table-error th {
-  background-color: #f8d7da; /* Светло-красный фон для заголовка */
-  color: #721c24; /* Глубокий красный цвет для текста */
+  background-color: #f8d7da;
+  color: #721c24;
   padding: 10px;
   text-align: left;
-  border-bottom: 2px solid #f5c6cb; /* Красная граница снизу */
+  border-bottom: 2px solid #f5c6cb;
 }
+
+
 
 .table-error td {
   padding: 10px;
-  border-bottom: 1px solid #f1f1f1; /* Лёгкая серая граница снизу */
+  border-bottom: 1px solid #f1f1f1;
 }
 
 .table-error .error-message {
-  color: #721c24; /* Глубокий красный цвет для текста ошибки */
-  background-color: #f8d7da; /* Светло-красный фон */
+  color: #721c24;
+  background-color: #f8d7da;
 }
 
 .table-error tr:nth-child(even) td {
-  background-color: #f9f9f9; /* Слабый серый для чётных строк */
+  background-color: #f9f9f9;
 }
 
+.hide-table{
+    opacity: 0 !important;
+    transition: opacity 1s ease;
+}
+
+
 table {
+opacity: 1;
+transition: opacity 1s ease;
 font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 font-size: 14px;
 border-radius: 10px;
@@ -328,6 +444,13 @@ text-align: center;
 width: auto;
 min-width: 30%;
 max-width: 1000px;
+margin: 15px;
+  transform: translateY(0%);
+  animation: ani 1s forwards;
+}
+@keyframes ani {
+  0% {transform: translateY(20%);}
+  100% {transform: translateY(0);}
 }
 th {
 background: #4676d7;

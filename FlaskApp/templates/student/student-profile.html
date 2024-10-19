@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link href="../static/css/style.css" rel="stylesheet">
+    <script src="/static/js/menu.js"></script>
+    <script type="module" src="/static/js/student/student-profile.js"></script>
+</head>
+<script type="module">
+    let student = JSON.parse({{ student | tojson }});
+    function populateStudentInfo(student) {
+        if (student.error === 0) {
+            document.getElementById('student-name').innerHTML += student['Имя'];
+            document.getElementById('student-mname').innerHTML += student['Отчество'];
+            document.getElementById('student-lastname').innerHTML += student['Фамилия'];
+            document.getElementById('birthdate').innerHTML += student['Дата рождения'];
+            document.getElementById('gender').innerHTML += student['Пол'];
+            document.getElementById('address').innerHTML += student['Адрес'];
+            document.getElementById('phone').innerHTML += student['Номер телефона'];
+            document.getElementById('mail').innerHTML += student['Электронная почта'];
+            document.getElementById('className').innerHTML += student['Класс'];
+            document.getElementById('teacherFio').innerHTML += student['Классный руководитель'];
+        } else {
+            console.error("Error fetching student information.");
+        }
+    }
+    populateStudentInfo(student);
+</script>
+<body>
+    <div id="menu-placeholder"></div>
+    <div class="toggle-head">
+        <button class="toggle-button" id="toggle-button" onclick="window.toggleStudentInfo()">
+            <span id="toggle-text">Мои данные</span><span class="arrow">▼</span></button>
+        <div class="student-info student-info-toggle" id="student-info">
+            <div class="student-field" id="student-name"><strong>Имя:</strong> </div>
+            <div class="student-field" id="student-mname"><strong>Отчество:</strong> </div>
+            <div class="student-field" id="student-lastname"><strong>Фамилия:</strong> </div>
+            <div class="student-field" id="birthdate"><strong>Дата рождения:</strong> </div>
+            <div class="student-field" id="gender"><strong>Пол:</strong> </div>
+            <div class="student-field" id="address"><strong>Адрес:</strong> </div>
+            <div class="student-field" id="phone"><strong>Номер телефона:</strong> </div>
+            <div class="student-field" id="mail"><strong>Электронная почта:</strong> </div>
+            <div class="student-field" id="className"><strong>Класс:</strong> </div>
+            <div class="student-field" id="teacherFio"><strong>Классный руководитель:</strong> </div>
+        </div>
+    </div>
+    <div class="center-buttons">
+     <button class="c-button" onclick="window.getClassmates()">Мой класс</button>
+     <button class="c-button" onclick="window.getGrades()">Мои оценки</button>
+    </div>
+    <div id="output"></div>
+</body>
+</html>
