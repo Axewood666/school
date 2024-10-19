@@ -16,6 +16,22 @@ api = Blueprint('api', __name__)
 
 @login_required
 @staff_required
+@api.route("/teacher/input-autocomplete", methods=['GET'])
+def teacher_autocomplete():
+    fio = request.args.get('term')
+    fio = fio.split()
+    fio.extend(['', ''])
+    teachers_arr = []
+    if 1 <= len(fio) <= 5:
+        teachers_arr = db.db_utils.find_fio(fio[0], fio[1], fio[2])
+        teachers_arr = \
+            [' '.join(list(fio if fio[2] else fio[:2])) for fio in teachers_arr]
+        print(teachers_arr)
+    return json.dumps(teachers_arr)
+
+
+@login_required
+@staff_required
 @api.route("/teacher/students", methods=['POST'])
 def list_of_students():
     fio = request.form.get('fio')
@@ -120,6 +136,15 @@ def list_of_student_grades():
 
 @login_required
 @teacher_required
+@api.route("/student/input-autocomplete", methods=['GET'])
+def classname_autocomplete():
+    classname = request.args.get('term')
+    classname_arr = db.db_utils.find_classname(classname)
+    classname_arr = [str(el[0]) for el in classname_arr]
+    return json.dumps(classname_arr)
+
+@login_required
+@teacher_required
 @api.route("/student/class-list", methods=['POST'])
 def class_list_by_name():
     json_data = request.get_json()
@@ -145,5 +170,3 @@ def class_list_by_student_fio():
         dicts_data[i]['Дата'] = dicts_data[i]['Дата'].isoformat()
     json_grades = json.dumps(dicts_data)
     return json_grades
-
-

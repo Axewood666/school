@@ -50,7 +50,7 @@ def logout():
 
 
 # teachers
-
+@login_required
 @staff_required
 @pages.route("/teacher")
 def teacher():
@@ -81,7 +81,8 @@ def student():
 def profile_student():
     student_data = db.db_utils.get_student_info(current_user.id.split('_')[1])
     if student_data:
-        fields = ['Имя', 'Отчество', 'Фамилия', 'Дата рождения', 'Пол', 'Адрес', 'Номер телефона', 'Электронная почта', 'Класс', 'Классный руководитель']
+        fields = ['Имя', 'Отчество', 'Фамилия', 'Дата рождения', 'Пол', 'Адрес', 'Номер телефона', 'Электронная почта', \
+                  'Класс', 'Классный руководитель']
         dicts_data = dict(zip(fields, student_data))
         dicts_data['Дата рождения'] = dicts_data['Дата рождения'].isoformat()
         dicts_data['error'] = 0

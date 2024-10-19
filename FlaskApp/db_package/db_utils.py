@@ -18,6 +18,30 @@ def get_db_connection():
 
 
 # teacher
+
+def find_fio(lastname, firstname, middlename):
+    if lastname and not firstname:
+        lastname = f"lastname LIKE '{lastname}%'"
+    elif firstname and not middlename:
+        lastname = f"lastname='{lastname}'"
+        firstname = f"and firstname LIKE '{firstname}%'"
+    elif middlename:
+        lastname = f"lastname='{lastname}'"
+        firstname = f"and firstname='{firstname}'"
+        middlename = f"and middlename LIKE '{middlename}%'"
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(
+            f"""SELECT lastname, firstname, middlename FROM teacher WHERE {lastname} {firstname} {middlename}""")
+        result = cur.fetchall()
+        cur.close()
+        conn.close()
+    except:
+        return []
+    return result
+
+
 def get_class_id_by_teacher_name(fio):
     result = 0
     if len(fio) > 2:
@@ -175,6 +199,21 @@ def Add_grade(json_data, teacherid, teacher_fio):
 
 
 # student
+
+def find_classname(classname):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(
+            f"""SELECT classname FROM class WHERE classname LIKE '{classname}%'""")
+        result = cur.fetchall()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print(e)
+        return []
+    return result
+
 def get_student_info(student_id):
     try:
         conn = get_db_connection()

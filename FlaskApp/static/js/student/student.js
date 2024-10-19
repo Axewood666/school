@@ -3,6 +3,21 @@ import { toggleStudentInfo } from '/static/js/student/data-process.js';
 import {print_error, clearElement} from '/static/js/script.js';
 import { handleGradeFormSubmit, closeGradeForm, openGradeForm } from '/static/js/script.js';
 
+$(function(){
+    $("input#class-name").autocomplete({
+        source: 'student/input-autocomplete',
+        autoFocus: true,
+        select: displayClass
+        });
+    function displayClass(event, ui){
+        clearElement(output);
+        const classNameJson = {
+            'className': ui.item.label
+        }
+        getClass(classNameJson);
+    }
+});
+
 function studentInfoDisplay(open = 0){
     if (open) {
         const toggleButton = document.getElementById('toggle-button');
@@ -76,3 +91,4 @@ const gradeForm = document.getElementById("grade-form");
 gradeForm.addEventListener('submit', handleGradeFormSubmit);
 window.openGradeFormWithFIO = openGradeFormWithFIO;
 window.closeGradeForm = closeGradeForm;
+
