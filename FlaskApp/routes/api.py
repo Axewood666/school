@@ -14,7 +14,6 @@ api = Blueprint('api', __name__)
 
 
 @api.route("/teacher/input-autocomplete", methods=['GET'])
-@login_required
 @staff_required
 def teacher_autocomplete():
     fio = request.args.get('term')
@@ -29,7 +28,6 @@ def teacher_autocomplete():
 
 
 @api.route("/teacher/students", methods=['POST'])
-@login_required
 @staff_required
 def list_of_students():
     fio = request.form.get('fio')
@@ -45,7 +43,6 @@ def list_of_students():
 
 
 @api.route("/teacher/subjects", methods=['POST'])
-@login_required
 @staff_required
 def list_of_subjects():
     json_fio = request.get_json()
@@ -59,7 +56,6 @@ def list_of_subjects():
 
 
 @api.route("/teacher/grades", methods=['POST'])
-@login_required
 @staff_required
 def list_of_grades():
     json_fio = request.get_json()
@@ -76,7 +72,6 @@ def list_of_grades():
 
 
 @api.route("/profile/teacher/add-grade", methods=['POST'])
-@login_required
 @teacher_required
 def add_grade():
     json_data = request.get_json()
@@ -104,7 +99,6 @@ def add_grade():
 
 
 @api.route("/student/input-autocomplete", methods=['GET'])
-@login_required
 @employee_required
 def classname_autocomplete():
     classname = request.args.get('term')
@@ -114,21 +108,28 @@ def classname_autocomplete():
 
 
 @api.route("/student/class-list", methods=['POST'])
-@login_required
 @employee_required
 def class_list_by_classname():
     json_data = request.get_json()
     class_name = json_data['className']
     class_list = db.schoolDB.get_class_by_class_name(class_name)
-    #if current_user.user_type == ""
-    fields = ['firstname', 'middlename', 'lastname', 'phone number', 'email']
-    dicts_data = [dict(zip(fields, values)) for values in class_list]
-    json_class_list = json.dumps(dicts_data)
-    return json_class_list
+    if class_list:
+        json_class_list = [dict()]
+        if current_user.user_type == "teacher":
+            fields = ['firstname', 'middlename', 'lastname', 'phone number', 'email']
+            dicts_data = [dict(zip(fields, values)) for values in class_list[:5]]
+            json_class_list = json.dumps(dicts_data)
+        elif current_user.user_type == "staff":
+            fields = ['firstname', 'middlename', 'lastname', 'phone number', 'email', 'address', 'birthdate']
+            dicts_data = [dict(zip(fields, values)) for values in class_list]
+            for i in range(len(dicts_data)):
+                dicts_data[i]['birthdate'] = dicts_data[i]['birthdate'].isoformat()
+            json_class_list = json.dumps(dicts_data)
+        return json_class_list
+    return {'error': 'Не найти класс'}, 404
 
 
 @api.route("/student/student-grades", methods=['POST'])
-@login_required
 @employee_required
 def class_list_by_student_fio():
     json_fio = request.get_json()
@@ -144,12 +145,11 @@ def class_list_by_student_fio():
 
 
 @api.route("/profile/student/class", methods=['GET'])
-@login_required
 @student_required
 def list_of_classmates():
     classmates = db.schoolDB.get_student_classmates(current_user.id.split('_')[1])
     if not classmates:
-        return {'error': "Возникла ошибка"}
+        return {'error': "Возникла ошибка"}, 404
     fields = ['Имя', 'Отчество', 'Фамилия', 'Номер телефона', 'Электронная почта']
     dicts_data = [dict(zip(fields, values)) for values in classmates]
     json_classmates = json.dumps(dicts_data)
@@ -157,7 +157,6 @@ def list_of_classmates():
 
 
 @api.route("/profile/student/grades", methods=['GET'])
-@login_required
 @student_required
 def list_of_student_grades():
     grades = db.schoolDB.get_student_grades(current_user.id.split('_')[1])

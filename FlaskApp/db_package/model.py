@@ -209,7 +209,8 @@ class SchoolDB:
 
     def get_class_by_class_name(self, class_name):
         try:
-            self.cur.execute(f"""SELECT firstname, middlename, lastname, phonenumber, email 
+            self.cur.execute(f"""SELECT firstname, middlename, lastname, phonenumber, email, 
+                address, birthdate
                 FROM student 
                 WHERE classid=(SELECT classid FROM class WHERE classname='{class_name}')""")
             class_tuple = self.cur.fetchall()
