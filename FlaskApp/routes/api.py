@@ -14,6 +14,7 @@ api = Blueprint('api', __name__)
 
 
 @api.route("/teacher/input-autocomplete", methods=['GET'])
+@login_required
 @staff_required
 def teacher_autocomplete():
     fio = request.args.get('term')
@@ -28,6 +29,7 @@ def teacher_autocomplete():
 
 
 @api.route("/teacher/students", methods=['POST'])
+@login_required
 @staff_required
 def list_of_students():
     fio = request.form.get('fio')
@@ -43,6 +45,7 @@ def list_of_students():
 
 
 @api.route("/teacher/subjects", methods=['POST'])
+@login_required
 @staff_required
 def list_of_subjects():
     json_fio = request.get_json()
@@ -56,6 +59,7 @@ def list_of_subjects():
 
 
 @api.route("/teacher/grades", methods=['POST'])
+@login_required
 @staff_required
 def list_of_grades():
     json_fio = request.get_json()
@@ -72,6 +76,7 @@ def list_of_grades():
 
 
 @api.route("/profile/teacher/add-grade", methods=['POST'])
+@login_required
 @teacher_required
 def add_grade():
     json_data = request.get_json()
@@ -99,6 +104,7 @@ def add_grade():
 
 
 @api.route("/student/input-autocomplete", methods=['GET'])
+@login_required
 @employee_required
 def classname_autocomplete():
     classname = request.args.get('term')
@@ -108,6 +114,7 @@ def classname_autocomplete():
 
 
 @api.route("/student/class-list", methods=['POST'])
+@login_required
 @employee_required
 def class_list_by_classname():
     json_data = request.get_json()
@@ -130,6 +137,7 @@ def class_list_by_classname():
 
 
 @api.route("/student/student-grades", methods=['POST'])
+@login_required
 @employee_required
 def class_list_by_student_fio():
     json_fio = request.get_json()
@@ -145,6 +153,7 @@ def class_list_by_student_fio():
 
 
 @api.route("/profile/student/class", methods=['GET'])
+@login_required
 @student_required
 def list_of_classmates():
     classmates = db.schoolDB.get_student_classmates(current_user.id.split('_')[1])
@@ -157,6 +166,7 @@ def list_of_classmates():
 
 
 @api.route("/profile/student/grades", methods=['GET'])
+@login_required
 @student_required
 def list_of_student_grades():
     grades = db.schoolDB.get_student_grades(current_user.id.split('_')[1])

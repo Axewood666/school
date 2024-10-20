@@ -12,8 +12,6 @@ else:
     from .requireds import teacher_required, student_required, employee_required, staff_required
 
 pages = Blueprint('pages', __name__)
-
-
 @pages.route("/")
 def main():
     return render_template('index.html', context="/")
@@ -53,12 +51,14 @@ def logout():
 
 
 @pages.route("/teacher")
+@login_required
 @staff_required
 def teacher():
     return render_template('teacher/teacher.html', context="/teacher")
 
 
 @pages.route("/profile/teacher")
+@login_required
 @teacher_required
 def profile_teacher():
     id_ = current_user.id.split('_')[1]
@@ -70,12 +70,14 @@ def profile_teacher():
 
 
 @pages.route("/student")
+@login_required
 @employee_required
 def student():
     return render_template("student/student.html", context="/student")
 
 
 @pages.route("/profile/student")
+@login_required
 @student_required
 def profile_student():
     student_data = db.schoolDB.get_student_info(current_user.id.split('_')[1])

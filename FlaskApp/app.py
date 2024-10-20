@@ -16,17 +16,14 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'pages.login'
 
-
 @login_manager.user_loader
 def load_user(user_id):
     try:
         user_type, id_ = user_id.split('_')
         user = db.User.get_user_by_id(id_, user_type, db.schoolDB)
         return user
-    except Exception as e:
-        print(e)
+    except:
         return None
-
 
 @app.errorhandler(404)
 def error404(error):

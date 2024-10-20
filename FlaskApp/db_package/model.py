@@ -268,6 +268,7 @@ class User(UserMixin):
                     WHERE {id_column} = %s
                 """, (id_,))
                 user_data = db.cur.fetchone()
+                print("get_user_by_id", user_data)
                 if user_data:
                     return User(id_=f"{user_type}_{user_data[0]}", login=user_data[1], user_type=user_type)
             except:
