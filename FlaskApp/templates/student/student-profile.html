@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Profile</title>
     <link href="../static/css/style.css" rel="stylesheet">
-    <script src="/static/js/menu.js"></script>
     <script type="module" src="/static/js/student/student-profile.js"></script>
 </head>
 <script type="module">
@@ -28,7 +27,7 @@
     populateStudentInfo(student);
 </script>
 <body>
-    <div id="menu-placeholder"></div>
+    {% include "menu.html" %}
     <div class="toggle-head">
         <button class="toggle-button" id="toggle-button" onclick="window.toggleStudentInfo()">
             <span id="toggle-text">Мои данные</span><span class="arrow">▼</span></button>

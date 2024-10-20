@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Student</title>
     <link href="../static/css/style.css" rel="stylesheet">
-    <script src="/static/js/menu.js"></script>
     <script type="module" src="/static/js/student/student.js"></script>
     <script src=
     "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
@@ -18,7 +17,7 @@
 </head>
 
 <body>
-<div id="menu-placeholder"></div>
+{% include "menu.html" %}
   <label class="text-field__label">Введите названия класса</label>
     <div class="teacher-input-form">
      <input class="text-field__input" style="width: 75px; min-width: 75px" type="text" id="class-name" name="class-name" required>

@@ -4,20 +4,11 @@
     <link href="../static/css/style.css" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Profile</title>
-    <script src="/static/js/menu.js"></script>
     <script type="module" src="../static/js/teacher/teacher-profile.js"></script>
     <script type="module" src="../static/js/teacher/requests.js"></script>
 </head>
 <body>
-   <div id="menu-placeholder"></div>
-<script type="module">
-    let arrFio = {{ fio | tojson }};
-    let fio = arrFio[0] + ' ' + arrFio[1]
-    if(arrFio.length > 2){
-        fio = fio + ' ' + arrFio[2]
-    }
-    window.fio = fio
-</script>
+   {% include "menu.html" %}
 <div class="teacher-block">
     <div class="center-buttons">
      <button class="c-button" onclick="window.List_of_students(window.fio)">Мой класс</button>
@@ -52,6 +43,14 @@
     </form>
 </div>
 </div>
+<script type="module">
+    let arrFio = {{ fio | tojson }};
+    let fio = arrFio[0] + ' ' + arrFio[1]
+    if(arrFio.length > 2){
+        fio = fio + ' ' + arrFio[2]
+    }
+    window.fio = fio
+</script>
 </body>
 </html>
 

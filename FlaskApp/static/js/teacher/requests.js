@@ -28,17 +28,27 @@ export async function addGrade(data) {
 export function List_of_students(fio) {
     let data = {'fio': fio};
     if(data.fio === "") return;
-    $.ajax({
-        url: '/teacher/students',
-        type: 'POST',
-        data: data,
-        success: function (response) {
-            process.students_response_process(response);
-        },
-        error: function (error) {
-            print_error(JSON.parse(error.responseText)[0].error)
 
+    fetch('/teacher/students', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                throw new Error(errorData[0].error);
+            });
         }
+        return response.json();
+    })
+    .then(responseData => {
+        process.students_response_process(responseData);
+    })
+    .catch(error => {
+        print_error(error.message);
     });
 }
 

@@ -1,6 +1,6 @@
 <nav>
   <ul class="menu">
-    {% if current_user.is_authenticated and context!=('/profile/'+current_user.user_type)%}
+    {% if current_user.is_authenticated and request.path !=('/profile/'+current_user.user_type)%}
       <li><a href="profile/{%print(current_user.user_type)%}">{% print(current_user.login) %}</a></li>
     {% endif %}
     {% if current_user.is_authenticated %}
@@ -8,13 +8,13 @@
     {% else %}
       <li><a href="/login">Login</a></li>
     {% endif %}
-    {% if context != '/' %}
+    {% if request.path != '/' %}
     <li><a href="/">Home</a></li>
     {% endif %}
-    {% if context !='/teacher' and current_user.is_authenticated and current_user.user_type == 'staff' %}
+    {% if request.path !='/teacher' and current_user.is_authenticated and current_user.user_type == 'staff' %}
     <li><a href="/teacher">Teachers</a></li>
     {% endif %}
-    {% if context != '/student' and current_user.is_authenticated and current_user.user_type in ['staff', 'teacher'] %}
+    {% if request.path != '/student' and current_user.is_authenticated and current_user.user_type in ['staff', 'teacher'] %}
     <li><a href="/student">Students</a></li>
     {% endif %}
   </ul>

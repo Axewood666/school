@@ -32,7 +32,7 @@ def teacher_autocomplete():
 @login_required
 @staff_required
 def list_of_students():
-    fio = request.form.get('fio')
+    fio = (request.get_json())['fio']
     class_id_tuple = db.schoolDB.get_class_id_by_teacher_name(fio.split())
     if not class_id_tuple:
         return [{'error': 'Преподавателя с таким фио не существует, либо у него нет класса'}], 404
@@ -41,7 +41,7 @@ def list_of_students():
         class_list = []
         [class_list.append(el[:-1]) for el in class_tuple]
         class_list.append(class_tuple[1][-1])
-        return class_list
+        return json.dumps(class_list)
 
 
 @api.route("/teacher/subjects", methods=['POST'])

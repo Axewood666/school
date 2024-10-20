@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title>Teachers</title>
     <script type="module" src="../static/js/teacher/teacher.js"></script>
-    <script src="/static/js/menu.js"></script>
     <script src=
     "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
     </script>
@@ -17,7 +16,7 @@
           rel="stylesheet" type="text/css"/>
 </head>
 <body>
-   <div id="menu-placeholder"></div>
+    {% include "menu.html" %}
 <div class="teacher-block">
      <label class="text-field__label" for="teacher-fio">Введите ФИО преподователя</label>
     <div class="teacher-input-form">
