@@ -1,2 +1,1 @@
-from . import db_utils
-from . import model
+from .db_utils import schoolDB, User

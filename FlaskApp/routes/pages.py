@@ -4,12 +4,12 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from flask_login import login_user, login_required, logout_user, current_user
 
+import FlaskApp.db_package as db
+
 if __name__ == '__main__':
     from requireds import teacher_required, student_required, employee_required, staff_required
 else:
     from .requireds import teacher_required, student_required, employee_required, staff_required
-
-import FlaskApp.db_package as db
 
 pages = Blueprint('pages', __name__)
 
@@ -32,7 +32,7 @@ def login():
         login = request.form['login']
         password = request.form['password']
         user_type = request.form['user_type']
-        user = db.model.User.get_user(login, password, user_type)
+        user = db.User.get_user(login, password, user_type, db.schoolDB)
         if user:
             login_user(user)
             if current_user.user_type == 'student':
@@ -50,36 +50,35 @@ def logout():
 
 
 # teachers
-@login_required
-@staff_required
+
+
 @pages.route("/teacher")
+@staff_required
 def teacher():
     return render_template('teacher/teacher.html', context="/teacher")
 
 
 @pages.route("/profile/teacher")
-@login_required
 @teacher_required
-def profile_student():
+def profile_teacher():
     id_ = current_user.id.split('_')[1]
-    fio = db.db_utils.get_teacher_fio(id_)
+    fio = db.schoolDB.get_teacher_fio(id_)
     return render_template("teacher/teacher-profile.html", fio=fio)
 
 
 # student
 
-@login_required
-@employee_required
+
 @pages.route("/student")
+@employee_required
 def student():
     return render_template("student/student.html", context="/student")
 
 
-@login_required
-@student_required
 @pages.route("/profile/student")
+@student_required
 def profile_student():
-    student_data = db.db_utils.get_student_info(current_user.id.split('_')[1])
+    student_data = db.schoolDB.get_student_info(current_user.id.split('_')[1])
     if student_data:
         fields = ['Имя', 'Отчество', 'Фамилия', 'Дата рождения', 'Пол', 'Адрес', 'Номер телефона', 'Электронная почта', \
                   'Класс', 'Классный руководитель']
