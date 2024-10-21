@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link href="../static/css/style.css" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Teachers</title>
     <script type="module" src="../static/js/teacher/teacher.js"></script>
-    <script src=
-    "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
     </script>
-    <script src=
-    "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
     </script>
-    <link href=
-    "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/dot-luv/jquery-ui.css"
-          rel="stylesheet" type="text/css"/>
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/dot-luv/jquery-ui.css" rel="stylesheet"
+        type="text/css" />
 </head>
+
 <body>
     {% include "menu.html" %}
-<div class="teacher-block">
-     <label class="text-field__label" for="teacher-fio">Введите ФИО преподователя</label>
-    <div class="teacher-input-form">
-     <input class="text-field__input" type="text" id="teacher-fio" name="teacherFio" required>
+    <div class="teacher-block">
+        <label class="text-field__label" for="teacher-fio">Введите ФИО преподователя</label>
+        <div class="teacher-input-form">
+            <input class="text-field__input" type="text" id="teacher-fio" name="teacherFio" required>
+        </div>
+        <div class="center-buttons">
+            <button class="c-button" onclick="window.getListOfStudents()">Класс</button>
+            <button class="c-button" onclick="window.getListOfSubjects()">Предметы</button>
+            <button class="c-button" onclick="window.getListOfGrades()">Оценки</button>
+        </div>
+        <div style="margin-top: 10px;" id="output"></div>
     </div>
-    <div class="center-buttons">
-     <button class="c-button" onclick="window.getListOfStudents()">Класс</button>
-     <button class="c-button" onclick="window.getListOfSubjects()">Предметы</button>
-     <button class="c-button" onclick="window.getListOfGrades()">Оценки</button>
-    </div>
-     <div style="margin-top: 10px;" id="output"></div>
-</div>
 </body>
+
 </html>
