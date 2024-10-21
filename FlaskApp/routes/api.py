@@ -144,7 +144,7 @@ def class_list_by_student_fio():
     grades_tuple = db.schoolDB.get_student_grades_by_fio(json_fio)
     if not grades_tuple or len(grades_tuple) == 0:
         return {'error': "У ученика нет оценок"}
-    fields = ['Оценка', 'Предмет', 'Преподаватель', 'Дата']
+    fields = ['Предмет', 'Оценка', 'Преподаватель', 'Дата']
     dicts_data = [dict(zip(fields, values)) for values in grades_tuple]
     for i in range(len(dicts_data)):
         dicts_data[i]['Дата'] = dicts_data[i]['Дата'].isoformat()
@@ -172,7 +172,7 @@ def list_of_student_grades():
     grades = db.schoolDB.get_student_grades(current_user.id.split('_')[1])
     if not grades:
         return {'error': "Возникла ошибка"}
-    fields = ['Предмет', 'Оценка', 'Преподаватель', 'Дата']
+    fields = ['Оценка', 'Предмет', 'Преподаватель', 'Дата']
     dicts_data = [dict(zip(fields, values)) for values in grades]
     for i in range(len(dicts_data)):
         dicts_data[i]['Дата'] = dicts_data[i]['Дата'].isoformat()
