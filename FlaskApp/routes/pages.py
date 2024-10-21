@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from flask_login import login_user, login_required, logout_user, current_user
 
-import FlaskApp.db_package as db
+import db_package as db
 
 if __name__ == '__main__':
     from requireds import teacher_required, student_required, employee_required, staff_required

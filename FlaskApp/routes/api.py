@@ -3,7 +3,7 @@ import json
 from flask import Blueprint, request
 from flask_login import current_user, login_required
 
-import FlaskApp.db_package as db
+import db_package as db
 
 if __name__ == '__main__':
     from requireds import teacher_required, staff_required, student_required, employee_required
