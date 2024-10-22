@@ -11,7 +11,8 @@ export async function addNewStudent(student){
         let result = await response.json();
         console.log(result.response);
     }else{
-        print_error(JSON.parse(error.responseText)[0].error)
+        let errorResult = await response.json();
+        print_error(errorResult.error)
     }
     }catch(error){
         console.log('Ошибка: ', error);

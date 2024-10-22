@@ -18,6 +18,7 @@
             <button class="c-button" onclick="window.openGradeForm()">Добавить студента</button>
             <button class="c-button" onclick="window.getListOfSubjects()">Добавить преподавателя</button>
      </div>
+        <div style="margin-top: 10px;" id="output"></div>
     <div class="popup-background" id="popup-background">
     <div class="grade-form-container">
         <h2>Добавить студента</h2>
@@ -28,15 +29,15 @@
             </div>
             <div class="text-field">
             <label class="text-field__label" for="class-name">Класс<span style="color: red;">*</span></label>
-            <input class="text-field__input" type="text" placeholder="Класс" id="class-name" name="class-name" required>
+            <input class="text-field__input" type="text" placeholder="Класс" id="class-name" name="class-name" pattern="(^[1-9][A-Z]$)|(^[1-9][0-1][A-Z]$)" required>
              </div>
             <div class="text-field">
             <label class="text-field__label" for="mail">Email<span style="color: red;">*</span></label>
-            <input class="text-field__input" type="text" placeholder="Email" id="mail" name="mail" required>
+            <input class="text-field__input" type="email" placeholder="Email" id="mail" name="mail" required>
             </div>
             <div class="text-field">
             <label class="text-field__label" for="phone-number">Номер телефона<span style="color: red;">*</span></label>
-            <input class="text-field__input" type="text" placeholder="Номер телефона" id="phone-number" name="phone-number" required>
+            <input class="text-field__input" type="tel" placeholder="Номер телефона" id="phone-number" name="phone-number" pattern="^((8|\+7)[\- ]?)?(\(?\d{3,4}\)?[\- ]?)?[\d\- ]{5,10}" required>
             </div>
             <div class="text-field">
             <label class="text-field__label" for="gender">Пол<span style="color: red;">*</span></label>
@@ -47,7 +48,7 @@
             </div>
             <div class="text-field">
             <label class="text-field__label" for="birthdate">Дата рождения<span style="color: red;">*</span></label>
-            <input class="text-field__input" type="text" placeholder="Дата рождения" id="birthdate" name="birthdate" required>
+            <input class="text-field__input" type="date" placeholder="Дата рождения" id="birthdate" name="birthdate" required>
             </div>
             <div class="text-field">
             <label class="text-field__label" for="address">Адрес<span style="color: red;">*</span></label>

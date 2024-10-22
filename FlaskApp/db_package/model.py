@@ -235,6 +235,7 @@ class SchoolDB:
                 return grades
             except:
                 return None
+
     def add_new_student(self, student_json):
         error = None
         print(student_json)
@@ -243,7 +244,7 @@ class SchoolDB:
             middlename = f"'{fio[2]}'"
         else:
             middlename = "null"
-        if len(fio) == 2:
+        if len(fio) in [2, 3]:
             try:
                 firstname = fio[1]
                 lastname = fio[0]
@@ -252,14 +253,38 @@ class SchoolDB:
                     phonenumber, email, classid)
                 VALUES ('{lastname}', '{firstname}', {middlename},
                     '{student_json['birthdate']}', '{student_json['gender']}', '{student_json['address']}', 
-                    '{student_json['phone-number']}', '{student_json['mail']}, 
-                    (SELECT classid FROM class WHERE classname='{student_json['class-name']}'))""")
+                    '{student_json['phone-number']}', '{student_json['mail']}', 
+                    (SELECT classid FROM class WHERE classname = '{student_json['class-name']}'))""")
+                self.conn.commit()
             except Exception as e:
-                print(e)
                 error = e
         else:
             error = "ФИО введено неверно"
         return error
+
+    def get_user(self, id_column, table, login, password):
+        try:
+            self.cur.execute(f"""
+               SELECT {id_column}, login FROM {table}
+               WHERE login = %s AND (SELECT(password=crypt(%s, password)) from {table})
+                """, (login, password))
+            user_data = self.cur.fetchone()
+        except:
+            user_data = None
+        return user_data
+
+    def get_user_by_id(self, id_column, table, id):
+        try:
+            self.cur.execute(f"""
+                SELECT {id_column}, login FROM {table}
+                WHERE {id_column} = %s
+            """, (id,))
+            user_data = self.cur.fetchone()
+        except:
+            user_data = None
+        return user_data
+
+
 class User(UserMixin):
     def __init__(self, id_, login, user_type):
         self.id = id_
@@ -269,31 +294,17 @@ class User(UserMixin):
     def get_user(login, password, user_type, db):
         table, id_column = User.get_user_profile_table_and_id_column(user_type)
         if table and id_column:
-            try:
-                db.cur.execute(f"""
-                    SELECT {id_column}, login FROM {table}
-                    WHERE login = %s AND (SELECT(password=crypt(%s, password)) from {table})
-                """, (login, password))
-                user_data = db.cur.fetchone()
-                if user_data:
-                    return User(id_=f"{user_type}_{user_data[0]}", login=user_data[1], user_type=user_type)
-            except:
-                return None
+            user_data = db.get_user(id_column, table, login, password)
+            if user_data:
+                return User(id_=f"{user_type}_{user_data[0]}", login=user_data[1], user_type=user_type)
         return None
 
     def get_user_by_id(id_, user_type, db):
         table, id_column = User.get_user_profile_table_and_id_column(user_type)
         if table and id_column:
-            try:
-                db.cur.execute(f"""
-                    SELECT {id_column}, login FROM {table}
-                    WHERE {id_column} = %s
-                """, (id_,))
-                user_data = db.cur.fetchone()
-                if user_data:
-                    return User(id_=f"{user_type}_{user_data[0]}", login=user_data[1], user_type=user_type)
-            except:
-                return None
+            user_data = db.get_user_by_id(id_column, table, id_)
+            if user_data:
+                return User(id_=f"{user_type}_{user_data[0]}", login=user_data[1], user_type=user_type)
         return None
 
     def get_user_profile_table_and_id_column(user_type):

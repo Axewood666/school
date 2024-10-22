@@ -187,5 +187,5 @@ def add_new_student():
     json_student = request.get_json()
     error = db.schoolDB.add_new_student(json_student)
     if error:
-        return {'error': error}, 404
+        return {'error': str(error)}, 404
     return {"response": "Ученик успешно добавлен!"}, 200
