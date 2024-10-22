@@ -5,7 +5,7 @@ import { handleGradeFormSubmit, closeGradeForm, openGradeForm } from '/static/js
 
 $(function(){
     $("input#class-name").autocomplete({
-        source: 'student/input-autocomplete',
+        source: '/student/input-autocomplete',
         autoFocus: true,
         select: displayClass
         });

@@ -219,7 +219,6 @@ class SchoolDB:
             return None
 
     def get_student_grades_by_fio(self, fio):
-        grades = 0
         if len(fio) > 2:
             middlename = fio['middlename']
             query = f"and middlename='{middlename}'"
@@ -236,8 +235,31 @@ class SchoolDB:
                 return grades
             except:
                 return None
-
-
+    def add_new_student(self, student_json):
+        error = None
+        print(student_json)
+        fio = student_json['fio'].split()
+        if len(fio) == 3:
+            middlename = f"'{fio[2]}'"
+        else:
+            middlename = "null"
+        if len(fio) == 2:
+            try:
+                firstname = fio[1]
+                lastname = fio[0]
+                self.cur.execute(f"""INSERT INTO student(lastname, firstname, middlename,
+                    birthdate, gender, adDress, 
+                    phonenumber, email, classid)
+                VALUES ('{lastname}', '{firstname}', {middlename},
+                    '{student_json['birthdate']}', '{student_json['gender']}', '{student_json['address']}', 
+                    '{student_json['phone-number']}', '{student_json['mail']}, 
+                    (SELECT classid FROM class WHERE classname='{student_json['class-name']}'))""")
+            except Exception as e:
+                print(e)
+                error = e
+        else:
+            error = "ФИО введено неверно"
+        return error
 class User(UserMixin):
     def __init__(self, id_, login, user_type):
         self.id = id_

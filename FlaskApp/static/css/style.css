@@ -153,6 +153,8 @@
 
  .popup-background {
    display: none;
+   overflow-x:hidden;
+   overflow-y:auto;
    position: fixed;
    top: 0;
    left: 0;
@@ -324,6 +326,7 @@
 
  body {
    margin: 0;
+   width:100%;
  }
 
  body,

@@ -93,3 +93,10 @@ def profile_student():
         dicts_data['error'] = 1
         json_student = json.dumps(dicts_data)
     return render_template("student/student-profile.html", student=json_student)
+
+
+@pages.route("/profile/staff")
+@login_required
+@staff_required
+def profile_staff():
+    return render_template("staff/staff-profile.html")

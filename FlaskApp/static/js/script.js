@@ -34,7 +34,7 @@ export function clearElement(element) {
     }
 }
 
-function serializeForm(formNode){
+export function serializeForm(formNode){
     const { elements } = formNode;
     const data = Array.from(elements)
     .filter(item => !!item.name)
@@ -61,3 +61,4 @@ export function handleGradeFormSubmit(event){
     const data = serializeForm(gradeForm);
     addGrade(data);
 }
+

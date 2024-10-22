@@ -178,3 +178,14 @@ def list_of_student_grades():
         dicts_data[i]['Дата'] = dicts_data[i]['Дата'].isoformat()
     json_grades = json.dumps(dicts_data)
     return json_grades
+
+
+@api.route("/profile/staff/add-new-student", methods=['POST'])
+@login_required
+@staff_required
+def add_new_student():
+    json_student = request.get_json()
+    error = db.schoolDB.add_new_student(json_student)
+    if error:
+        return {'error': error}, 404
+    return {"response": "Ученик успешно добавлен!"}, 200
