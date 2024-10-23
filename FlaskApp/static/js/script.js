@@ -46,12 +46,12 @@ export function serializeForm(formNode){
     return data;
 }
 
-export function openGradeForm(){
-    document.getElementById("popup-background").style.display = "flex";
+export function openGradeForm(id = "popup-background"){
+    document.getElementById(id).style.display = "flex";
 }
-export function closeGradeForm(){
+export function closeGradeForm(id = "popup-background"){
     event.preventDefault();
-    document.getElementById("popup-background").style.display = "none";
+    document.getElementById(id).style.display = "none";
 }
 
 export function handleGradeFormSubmit(event){

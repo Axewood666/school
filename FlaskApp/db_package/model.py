@@ -252,12 +252,40 @@ class SchoolDB:
                 firstname = fio[1]
                 lastname = fio[0]
                 self.cur.execute(f"""INSERT INTO student(lastname, firstname, middlename,
-                    birthdate, gender, adDress, 
+                    birthdate, gender, address, 
                     phonenumber, email, classid)
                 VALUES ('{lastname}', '{firstname}', {middlename},
                     '{student_json['birthdate']}', '{student_json['gender']}', '{student_json['address']}', 
                     '{student_json['phone-number']}', '{student_json['mail']}', 
                     (SELECT classid FROM class WHERE classname = '{student_json['class-name']}')) returning studentid""")
+                insert_id = self.cur.fetchone()
+            except Exception as e:
+                error_msg = e
+                error = 1
+        else:
+            error_msg = "ФИО введено неверно"
+            error = 1
+        return error, error_msg, insert_id
+
+    def add_new_teacher(self, teacher_json):
+        error = None
+        error_msg = None
+        insert_id = None
+        fio = teacher_json['fio'].split()
+        if len(fio) == 3:
+            middlename = f"'{fio[2]}'"
+        else:
+            middlename = "null"
+        if len(fio) in [2, 3]:
+            try:
+                firstname = fio[1]
+                lastname = fio[0]
+                self.cur.execute(f"""INSERT INTO teacher(lastname, firstname, middlename,
+                    birthdate, gender, address, 
+                    phonenumber, email)
+                VALUES ('{lastname}', '{firstname}', {middlename},
+                    '{teacher_json['birthdate']}', '{teacher_json['gender']}', '{teacher_json['address']}', 
+                    '{teacher_json['phone-number']}', '{teacher_json['mail']}') returning teacherid""")
                 insert_id = self.cur.fetchone()
             except Exception as e:
                 error_msg = e

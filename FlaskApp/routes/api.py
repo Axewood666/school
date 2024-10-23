@@ -198,3 +198,21 @@ def add_new_student():
         return {"error": str(error)}, 404
     mail.send_email_for_student(json_student, login, password)
     return {"response": "Ученик успешно добавлен!"}, 200
+
+
+@api.route("/profile/staff/add-new-teacher", methods=['POST'])
+@login_required
+@staff_required
+def add_new_teacher():
+    json_teacher = request.get_json()
+    error, error_msg, insert_id = db.schoolDB.add_new_teacher(json_teacher)
+    if error:
+        db.schoolDB.rollback()
+        return {'error': str(error_msg)}, 404
+    login, password = auth.generate_profile(json_teacher['fio'].split()[0], insert_id[0])
+    error = db.schoolDB.add_profile('teacher', insert_id, login, password)
+    if error:
+        db.schoolDB.rollback()
+        return {"error": str(error)}, 404
+    mail.send_email_for_teacher(json_teacher, login, password)
+    return {"response": "Преподаватель успешно добавлен!"}, 200

@@ -18,3 +18,22 @@ export async function addNewStudent(student){
         console.log('Ошибка: ', error);
     }
 }
+
+export async function addNewTeacher(student){
+    try {
+    let response = await fetch('/profile/staff/add-new-teacher', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(student)
+    });
+    if(response.ok){
+        let result = await response.json();
+        console.log(result.response);
+    }else{
+        let errorResult = await response.json();
+        print_error(errorResult.error)
+    }
+    }catch(error){
+        console.log('Ошибка: ', error);
+    }
+}

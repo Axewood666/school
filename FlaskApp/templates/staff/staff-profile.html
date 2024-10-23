@@ -16,7 +16,7 @@
     {% include "menu.html" %}
      <div class="center-buttons">
             <button class="c-button" onclick="window.openGradeForm()">Добавить студента</button>
-            <button class="c-button" onclick="window.getListOfSubjects()">Добавить преподавателя</button>
+            <button class="c-button" onclick="window.openGradeForm('popup-background-teacher')">Добавить преподавателя</button>
      </div>
         <div style="margin-top: 10px;" id="output"></div>
     <div class="popup-background" id="popup-background">
@@ -55,6 +55,42 @@
             <input class="text-field__input" type="text" placeholder="Адрес" id="address" name="address" required>
             </div>
             <button class="c-button close-button" value="Cancel" onclick="window.closeGradeForm()" formnovalidate>Закрыть</button>
+            <button type="submit" class="c-button">Выставить</button>
+        </form>
+    </div>
+    </div>
+ <div class="popup-background" id="popup-background-teacher">
+    <div class="grade-form-container">
+        <h2>Добавить преподавателя</h2>
+        <form action="/submit" method="post" id="teacher-add-form">
+            <div class="text-field">
+            <label class="text-field__label" for="fio">ФИО<span style="color: red;">*</span></label>
+            <input class="text-field__input" type="text" placeholder="ФИО" id="fio-teacher" name="fio" required>
+            </div>
+            <div class="text-field">
+            <label class="text-field__label" for="mail">Email<span style="color: red;">*</span></label>
+            <input class="text-field__input" type="email" placeholder="Email" id="mail-teacher" name="mail" required>
+            </div>
+            <div class="text-field">
+            <label class="text-field__label" for="phone-number">Номер телефона<span style="color: red;">*</span></label>
+            <input class="text-field__input" type="tel" placeholder="Номер телефона" id="phone-number-teacher" name="phone-number" pattern="^((8|\+7)[\- ]?)?(\(?\d{3,4}\)?[\- ]?)?[\d\- ]{5,10}" required>
+            </div>
+            <div class="text-field">
+            <label class="text-field__label" for="gender">Пол<span style="color: red;">*</span></label>
+             <select id="gender-teacher" name="gender" class="text-field__input" required>
+                <option value="M">Мужской</option>
+                <option value="F">Женский</option>
+             </select>
+            </div>
+            <div class="text-field">
+            <label class="text-field__label" for="birthdate">Дата рождения<span style="color: red;">*</span></label>
+            <input class="text-field__input" type="date" placeholder="Дата рождения" id="birthdate-teacher" name="birthdate" required>
+            </div>
+            <div class="text-field">
+            <label class="text-field__label" for="address">Адрес<span style="color: red;">*</span></label>
+            <input class="text-field__input" type="text" placeholder="Адрес" id="address-teacher" name="address" required>
+            </div>
+            <button class="c-button close-button" value="Cancel" onclick="window.closeGradeForm('popup-background-teacher')" formnovalidate>Закрыть</button>
             <button type="submit" class="c-button">Выставить</button>
         </form>
     </div>
