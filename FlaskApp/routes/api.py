@@ -196,5 +196,5 @@ def add_new_student():
     if error:
         db.schoolDB.rollback()
         return {"error": str(error)}, 404
-    mail.send_email(json_student, login, password)
+    mail.send_email_for_student(json_student, login, password)
     return {"response": "Ученик успешно добавлен!"}, 200
