@@ -2,7 +2,7 @@ from flask_mail import Message
 from flask import current_app, render_template
 from threading import Thread
 
-from FlaskApp import mail
+from __init__ import mail
 
 
 def send_async_email(app, msg):
