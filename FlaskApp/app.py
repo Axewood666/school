@@ -1,7 +1,7 @@
 import db_package as db
 from flask import render_template
 from flask_login import LoginManager
-from FlaskApp import create_app
+from __init__ import create_app
 
 app = create_app()
 login_manager = LoginManager()

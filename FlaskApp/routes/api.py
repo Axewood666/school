@@ -4,9 +4,9 @@ from flask import Blueprint, request
 from flask_login import current_user, login_required
 
 import db_package as db
-import FlaskApp.auth.auth as auth
+import auth.auth as auth
 
-import FlaskApp.myemail.email as mail
+import myemail.email as mail
 
 if __name__ == '__main__':
     from requireds import teacher_required, staff_required, student_required, employee_required
