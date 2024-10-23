@@ -1,2 +1,2 @@
-from . import pages
-from . import api
+from .pages import pages
+from .api import api

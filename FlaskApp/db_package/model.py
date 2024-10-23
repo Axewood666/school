@@ -1,6 +1,5 @@
 import psycopg2
 from flask_login import UserMixin
-from . import db_utils
 
 
 class SchoolDB:
@@ -14,6 +13,9 @@ class SchoolDB:
     def close_connection(self):
         self.cur.close()
         self.conn.close()
+
+    def rollback(self):
+        self.conn.rollback()
 
     def find_fio(self, lastname, firstname, middlename):
         if lastname and not firstname:
@@ -238,7 +240,8 @@ class SchoolDB:
 
     def add_new_student(self, student_json):
         error = None
-        print(student_json)
+        error_msg = None
+        insert_id = None
         fio = student_json['fio'].split()
         if len(fio) == 3:
             middlename = f"'{fio[2]}'"
@@ -254,22 +257,36 @@ class SchoolDB:
                 VALUES ('{lastname}', '{firstname}', {middlename},
                     '{student_json['birthdate']}', '{student_json['gender']}', '{student_json['address']}', 
                     '{student_json['phone-number']}', '{student_json['mail']}', 
-                    (SELECT classid FROM class WHERE classname = '{student_json['class-name']}'))""")
-                self.conn.commit()
+                    (SELECT classid FROM class WHERE classname = '{student_json['class-name']}')) returning studentid""")
+                insert_id = self.cur.fetchone()
             except Exception as e:
-                error = e
+                error_msg = e
+                error = 1
         else:
-            error = "ФИО введено неверно"
-        return error
+            error_msg = "ФИО введено неверно"
+            error = 1
+        return error, error_msg, insert_id
+
+    def add_profile(self, user_type, id, login, password):
+        try:
+            table, id_column = User.get_user_profile_table_and_id_column(user_type)
+            self.cur.execute(f"""INSERT INTO {table} ({id_column}, login, password)
+            VALUES ('{id[0]}','{login}', crypt('{password}', gen_salt('md5')))""")
+            self.conn.commit()
+            return 0
+        except Exception as e:
+            print(e)
+            return e
 
     def get_user(self, id_column, table, login, password):
         try:
             self.cur.execute(f"""
                SELECT {id_column}, login FROM {table}
-               WHERE login = %s AND (SELECT(password=crypt(%s, password)) from {table})
-                """, (login, password))
+               WHERE login = '{login}' AND password=crypt('{password}', password)
+                """)
             user_data = self.cur.fetchone()
-        except:
+        except Exception as e:
+            print(e)
             user_data = None
         return user_data
 

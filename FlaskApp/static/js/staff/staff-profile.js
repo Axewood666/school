@@ -13,6 +13,7 @@ function handleAddStudentForm(){
     const data = serializeForm(gradeForm);
     addNewStudent(data);
     closeGradeForm();
+    clearElement(document.getElementById("output"));
 }
 
 const gradeForm = document.getElementById("grade-form");

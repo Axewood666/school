@@ -1,17 +1,9 @@
 import db_package as db
-from flask import Flask, render_template
-from configparser import ConfigParser
+from flask import render_template
 from flask_login import LoginManager
-import routes
+from FlaskApp import create_app
 
-app = Flask(__name__)
-app.register_blueprint(routes.pages.pages)
-app.register_blueprint(routes.api.api)
-urlconf = 'config/config.ini'
-config = ConfigParser()
-config.read(urlconf)
-secret_key = config['flask']['secret_key']
-app.secret_key = secret_key
+app = create_app()
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'pages.login'

@@ -12,6 +12,8 @@ else:
     from .requireds import teacher_required, student_required, employee_required, staff_required
 
 pages = Blueprint('pages', __name__)
+
+
 @pages.route("/")
 def main():
     return render_template('index.html', context="/")
@@ -23,7 +25,6 @@ def Menu():
     return render_template('menu.html', context=path)
 
 
-# login
 @pages.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':

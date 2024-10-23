@@ -4,6 +4,9 @@ from flask import Blueprint, request
 from flask_login import current_user, login_required
 
 import db_package as db
+import FlaskApp.auth.auth as auth
+
+import FlaskApp.myemail.email as mail
 
 if __name__ == '__main__':
     from requireds import teacher_required, staff_required, student_required, employee_required
@@ -36,12 +39,11 @@ def list_of_students():
     class_id_tuple = db.schoolDB.get_class_id_by_teacher_name(fio.split())
     if not class_id_tuple:
         return [{'error': 'Преподавателя с таким фио не существует, либо у него нет класса'}], 404
-    else:
-        class_tuple = db.schoolDB.get_class_list_by_classid(class_id_tuple[0])
-        class_list = []
-        [class_list.append(el[:-1]) for el in class_tuple]
-        class_list.append(class_tuple[1][-1])
-        return json.dumps(class_list)
+    class_tuple = db.schoolDB.get_class_list_by_classid(class_id_tuple[0])
+    class_list = []
+    [class_list.append(el[:-1]) for el in class_tuple]
+    class_list.append(class_tuple[1][-1])
+    return json.dumps(class_list)
 
 
 @api.route("/teacher/subjects", methods=['POST'])
@@ -185,7 +187,14 @@ def list_of_student_grades():
 @staff_required
 def add_new_student():
     json_student = request.get_json()
-    error = db.schoolDB.add_new_student(json_student)
+    error, error_msg, insert_id = db.schoolDB.add_new_student(json_student)
     if error:
-        return {'error': str(error)}, 404
+        db.schoolDB.rollback()
+        return {'error': str(error_msg)}, 404
+    login, password = auth.generate_profile(json_student['fio'].split()[0], insert_id[0])
+    error = db.schoolDB.add_profile('student', insert_id, login, password)
+    if error:
+        db.schoolDB.rollback()
+        return {"error": str(error)}, 404
+    mail.send_email(json_student, login, password)
     return {"response": "Ученик успешно добавлен!"}, 200
