@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from flask_login import login_user, login_required, logout_user, current_user
 
-from FlaskApp.db_package.model import User
+from FlaskApp.db_package.models import User
 from FlaskApp.app import schoolDB
 
 from FlaskApp.routes.requireds import teacher_required, student_required, employee_required, staff_required

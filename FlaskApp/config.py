@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 
-from FlaskApp.db_package.model import SchoolDB
+from FlaskApp.db_package.models import SchoolDB
 
 
 def set_app_config(app):

@@ -2,7 +2,7 @@ import random
 import string
 
 from FlaskApp.app import schoolDB, login_manager
-from FlaskApp.db_package.model import User
+from FlaskApp.db_package.models import User
 
 @login_manager.user_loader
 def load_user(user_id):
