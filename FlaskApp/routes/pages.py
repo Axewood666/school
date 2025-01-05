@@ -4,12 +4,10 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from flask_login import login_user, login_required, logout_user, current_user
 
-import db_package as db
+from FlaskApp.db_package.model import User
+from FlaskApp.app import schoolDB
 
-if __name__ == '__main__':
-    from requireds import teacher_required, student_required, employee_required, staff_required
-else:
-    from .requireds import teacher_required, student_required, employee_required, staff_required
+from FlaskApp.routes.requireds import teacher_required, student_required, employee_required, staff_required
 
 pages = Blueprint('pages', __name__)
 
@@ -31,7 +29,7 @@ def login():
         login = request.form['login']
         password = request.form['password']
         user_type = request.form['user_type']
-        user = db.User.get_user(login, password, user_type, db.schoolDB)
+        user = User.get_user(login, password, user_type, schoolDB)
         if user:
             login_user(user)
             if current_user.user_type == 'student':
@@ -63,7 +61,7 @@ def teacher():
 @teacher_required
 def profile_teacher():
     id_ = current_user.id.split('_')[1]
-    fio = db.schoolDB.get_teacher_fio(id_)
+    fio = schoolDB.get_teacher_fio(id_)
     return render_template("teacher/teacher-profile.html", fio=fio)
 
 
@@ -81,7 +79,7 @@ def student():
 @login_required
 @student_required
 def profile_student():
-    student_data = db.schoolDB.get_student_info(current_user.id.split('_')[1])
+    student_data = schoolDB.get_student_info(current_user.id.split('_')[1])
     if student_data:
         fields = ['Имя', 'Отчество', 'Фамилия', 'Дата рождения', 'Пол', 'Адрес', 'Номер телефона', 'Электронная почта', \
                   'Класс', 'Классный руководитель']

@@ -1,22 +1,28 @@
-import db_package as db
 from flask import render_template
-from flask_login import LoginManager
-from __init__ import create_app
 
-app = create_app()
+from flask import Flask
+from flask_login import LoginManager
+from flask_mail import Mail
+from FlaskApp.config import set_app_config, connect_db
+app = Flask(__name__)
+
+set_app_config(app)
+
+mail = Mail()
+mail.init_app(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'pages.login'
 
+schoolDB = connect_db()
 
-@login_manager.user_loader
-def load_user(user_id):
-    try:
-        user_type, id_ = user_id.split('_')
-        user = db.User.get_user_by_id(id_, user_type, db.schoolDB)
-        return user
-    except:
-        return None
+
+from FlaskApp.routes.pages import pages
+from FlaskApp.routes.api import api
+
+app.register_blueprint(pages)
+app.register_blueprint(api)
 
 
 @app.errorhandler(404)

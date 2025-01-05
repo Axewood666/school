@@ -1,13 +1,10 @@
 from configparser import ConfigParser
 
-from flask import Flask
-from flask_mail import Mail
+from FlaskApp.db_package.model import SchoolDB
 
-mail = Mail()
 
-def create_app():
-    app = Flask(__name__)
-    urlconf = 'config/config.ini'
+def set_app_config(app):
+    urlconf = 'config.ini'
     config = ConfigParser()
     config.read(urlconf)
     secret_key = config['flask']['secret_key']
@@ -19,9 +16,14 @@ def create_app():
     app.config['MAIL_USERNAME'] = config['email']['MAIL_USERNAME']
     app.config['MAIL_PASSWORD'] = config['email']['MAIL_PASSWORD']
     app.config['MAIL_DEFAULT_SENDER'] = config['email']['MAIL_DEFAULT_SENDER']
-    mail.init_app(app)
-    import routes
-    app.register_blueprint(routes.pages)
-    app.register_blueprint(routes.api)
-    return app
 
+def connect_db():
+    urlconf = 'config.ini'
+    config = ConfigParser()
+    config.read(urlconf)
+    user_db = config['login_db']['user_db']
+    password_db = config['login_db']['password_db']
+    name_db = config['login_db']['database_name']
+    host_db = config['login_db']['host_db']
+    port_db = config['login_db']['port_db']
+    return SchoolDB(name_db, user_db, password_db, host_db, port_db)

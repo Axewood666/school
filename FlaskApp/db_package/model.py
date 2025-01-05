@@ -3,11 +3,12 @@ from flask_login import UserMixin
 
 
 class SchoolDB:
-    def __init__(self, db_name, user, password, host='localhost'):
+    def __init__(self, db_name, user, password, host='localhost', port=5432):
         self.conn = psycopg2.connect(host=host,
                                      database=db_name,
                                      user=user,
-                                     password=password)
+                                     password=password,
+                                     port=port)
         self.cur = self.conn.cursor()
 
     def close_connection(self):
